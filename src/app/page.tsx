@@ -17,7 +17,6 @@ const trustFeatures = [
 
 const intentions = [
   { name: "LOVE", image: "/images/products/love-attraction-main.jpg" },
-  { name: "ABUNDANCE", image: "/images/products/dhan-yog-main.jpg" },
   { name: "CALM", image: "/images/products/turquoise-main.jpg" },
   { name: "PROTECTION", image: "/images/products/red-carnelian-main.jpg" },
   { name: "CONFIDENCE", image: "/images/products/tiger-eye-main.jpg" },

@@ -84,20 +84,5 @@ export const products: Product[] = [
       "/images/products/turquoise-v2.jpg"
     ],
     category: "Calm",
-  },
-  {
-    id: "dhan-yog",
-    name: "DHAN YOG BRACELET",
-    description: "Our signature Dhan Yog bracelet combines powerful manifestation stones including Pyrite, Citrine, and Green Aventurine. Traditionally worn to attract abundance, focus, and opportunity into your life.",
-    shortIntention: "Abundance • Manifestation • Success",
-    price: 2100,
-    image: "/images/products/dhan-yog-main.jpg",
-    gallery: [
-      "/images/products/dhan-yog-main.jpg",
-      "/images/products/dhan-yog-1.jpg",
-      "/images/products/dhan-yog-2.jpg",
-      "/images/products/dhan-yog-v2.jpg"
-    ],
-    category: "Abundance",
   }
 ];
