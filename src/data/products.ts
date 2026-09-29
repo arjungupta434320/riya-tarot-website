@@ -2,15 +2,6 @@ import { Product } from "@/store/useStore";
 
 export const products: Product[] = [
   {
-    id: "dhan-yog",
-    name: "DHAN YOG BRACELET",
-    description: "A rich combination of prosperity-inspired stones selected for those who enjoy keeping abundance, confidence and focused intention close to them. Its earthy tones make it easy to style while adding a meaningful ritual element to everyday wear.",
-    shortIntention: "Abundance • Confidence • Focus",
-    price: 2100,
-    image: "/images/products/dhan-yog-v2.jpg",
-    category: "Abundance",
-  },
-  {
     id: "love-attraction",
     name: "ROSE QUARTZ BRACELET",
     description: "A delicate pink Rose Quartz bracelet inspired by the traditional symbolism of unconditional love. Created around themes of self-love, warmth and emotional connection, it makes a thoughtful personal or gifting piece.",
