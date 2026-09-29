@@ -93,28 +93,29 @@ export default function Home() {
         <div className="container mx-auto px-6">
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-8">
             {intentions.map((intention, idx) => (
-              <motion.div 
-                key={idx}
-                initial={{ opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                whileHover={{ y: -5 }}
-                className="group cursor-pointer block relative overflow-hidden aspect-square bg-secondary"
-              >
-                <Image 
-                  src={intention.image} 
-                  alt={intention.name}
-                  fill
-                  className="object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-500"></div>
-                <div className="absolute bottom-0 left-0 w-full p-6 text-white flex flex-col items-center">
-                  <h3 className="text-lg md:text-xl font-serif tracking-widest mb-2">{intention.name}</h3>
-                  <span className="text-xs tracking-[0.2em] uppercase border-b border-white/50 pb-1 flex items-center gap-2 group-hover:border-accent group-hover:text-accent transition-colors">
-                    Explore <ArrowRight size={14} />
-                  </span>
-                </div>
-              </motion.div>
+              <Link href="/shop" key={idx}>
+                <motion.div 
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  whileHover={{ y: -5 }}
+                  className="group cursor-pointer block relative overflow-hidden aspect-square bg-secondary h-full w-full"
+                >
+                  <Image 
+                    src={intention.image} 
+                    alt={intention.name}
+                    fill
+                    className="object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  <div className="absolute bottom-0 left-0 w-full p-6 text-white flex flex-col items-center">
+                    <h3 className="text-lg md:text-xl font-serif tracking-widest mb-2">{intention.name}</h3>
+                    <span className="text-xs tracking-[0.2em] uppercase border-b border-white/50 pb-1 flex items-center gap-2 group-hover:border-accent group-hover:text-accent transition-colors">
+                      Explore <ArrowRight size={14} />
+                    </span>
+                  </div>
+                </motion.div>
+              </Link>
             ))}
           </div>
         </div>
