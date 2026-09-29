@@ -33,11 +33,7 @@ export default function Home() {
   return (
     <div className="bg-background text-primary overflow-hidden">
       
-      {/* ANNOUNCEMENT BAR */}
-      <div className="bg-accent text-primary text-xs font-semibold tracking-widest text-center py-2 relative overflow-hidden group">
-        <div className="absolute inset-0 bg-white/20 -translate-x-full group-hover:animate-[shimmer_2s_infinite]"></div>
-        ✨ Every bracelet is prepared with intention & care ✨
-      </div>
+
 
       {/* HERO SECTION */}
       <section ref={heroRef} className="relative h-[90vh] md:h-screen w-full bg-primary flex items-center overflow-hidden">
