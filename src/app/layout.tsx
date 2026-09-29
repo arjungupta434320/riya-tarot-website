@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Playfair_Display, Inter } from "next/font/google";
+import { Playfair_Display, Inter, Cinzel } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -15,6 +15,11 @@ const inter = Inter({
   subsets: ["latin"],
 });
 
+const cinzel = Cinzel({
+  variable: "--font-cinzel",
+  subsets: ["latin"],
+});
+
 export const metadata: Metadata = {
   title: "Riya Tarot Crystals | Wear Your Intention",
   description: "Hand-selected crystal bracelets designed for mindful rituals, meaningful gifting and everyday spiritual style.",
@@ -27,7 +32,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${playfair.variable} ${inter.variable} antialiased min-h-screen flex flex-col bg-background text-foreground`}>
+      <body className={`${playfair.variable} ${inter.variable} ${cinzel.variable} antialiased min-h-screen flex flex-col bg-background text-foreground`}>
         <Navbar />
         <main className="flex-grow">
           {children}

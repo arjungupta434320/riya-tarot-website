@@ -40,28 +40,26 @@ export default function Home() {
         <motion.div style={{ y }} className="absolute inset-0 w-full h-full">
           {/* I will use the generated hero image here */}
           <div className="absolute inset-0 bg-[url('/images/hero_background.jpg')] bg-cover bg-center opacity-60 mix-blend-luminosity"></div>
-          <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary/80 to-transparent"></div>
+          <div className="absolute inset-0 bg-primary/40 mix-blend-multiply"></div>
         </motion.div>
         
-        <div className="container mx-auto px-6 relative z-10 flex flex-col items-center md:items-start text-center md:text-left">
-          <div className="max-w-2xl text-secondary">
+        <div className="container mx-auto px-6 relative z-10 flex flex-col items-center justify-center text-center h-full pt-20">
+          <div className="max-w-4xl text-secondary flex flex-col items-center">
             <motion.h1 
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, ease: "easeOut" }}
-              className="font-serif text-3xl sm:text-5xl md:text-7xl lg:text-8xl leading-[1.1] mb-8"
+              transition={{ duration: 1.2, ease: "easeOut" }}
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light tracking-[0.2em] md:tracking-[0.3em] mb-12 font-[family-name:var(--font-cinzel)]"
             >
-              RIYA TAROT<br className="hidden sm:block"/>
-              <span className="text-accent italic">CRYSTALS</span>
+              RIYA TAROT CRYSTALS
             </motion.h1>
             <motion.div 
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, delay: 0.4, ease: "easeOut" }}
-              className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 1.2, delay: 0.6, ease: "easeOut" }}
             >
-              <Link href="/shop" className="px-8 py-4 bg-accent text-primary text-xs sm:text-sm tracking-[0.2em] uppercase font-semibold hover:bg-secondary transition-colors text-center magnetic-button w-full sm:w-auto">
-                Shop Bracelets
+              <Link href="/shop" className="px-10 py-4 border border-secondary/60 text-secondary text-xs sm:text-sm tracking-[0.2em] uppercase hover:bg-secondary hover:text-primary transition-all duration-500 ease-out backdrop-blur-sm">
+                Shop the Collection
               </Link>
             </motion.div>
           </div>

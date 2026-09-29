@@ -53,7 +53,7 @@ export default function Navbar() {
         {/* Center: Logo */}
         <div className="flex justify-center items-center z-40 px-12">
           <Link href="/" className="flex flex-col items-center">
-            <span className="font-serif text-sm sm:text-base md:text-2xl font-semibold tracking-widest md:tracking-[0.2em] text-center">
+            <span className="text-sm sm:text-base md:text-2xl font-normal tracking-[0.15em] md:tracking-[0.25em] text-center font-[family-name:var(--font-cinzel)] text-primary">
               RIYA TAROT CRYSTALS
             </span>
           </Link>
