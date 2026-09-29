@@ -1,0 +1,45 @@
+@import "tailwindcss";
+
+:root {
+  --background: #FFFDF8;
+  --foreground: #382400;
+  
+  --color-primary: #7D5306;
+  --color-secondary: #F6EDDC;
+  --color-accent: #F4B139;
+  
+  --color-soft-purple: #C4A0CC;
+  --color-warm-beige: #BCAC8C;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  
+  --color-primary: var(--color-primary);
+  --color-secondary: var(--color-secondary);
+  --color-accent: var(--color-accent);
+  --color-soft-purple: var(--color-soft-purple);
+  --color-warm-beige: var(--color-warm-beige);
+
+  --font-serif: "Playfair Display", Georgia, serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-serif);
+}
+
+.magnetic-button {
+  transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), background-color 0.3s;
+}
+.magnetic-button:hover {
+  transform: translateY(-2px);
+}

@@ -1,0 +1,17 @@
+{
+  "name": "imageslice",
+  "version": "1.0.0",
+  "description": "",
+  "main": "slice.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "node-vibrant": "^4.0.4",
+    "sharp": "^0.35.5"
+  }
+}

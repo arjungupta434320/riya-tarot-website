@@ -1,0 +1,1 @@
+const { Vibrant } = require('node-vibrant/node'); Vibrant.from('C:/Users/DELL/Downloads/riya tarot crystals website/public/images/logo.jpg').getPalette().then((palette) => { console.log(JSON.stringify(palette, null, 2)); }).catch(console.error);
