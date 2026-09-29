@@ -22,7 +22,7 @@ export default function Navbar() {
     <>
       {/* High CTA Announcement Bar */}
       <div className="bg-primary text-secondary py-2 px-4 text-center text-xs sm:text-sm tracking-widest uppercase relative z-[60] flex items-center justify-center gap-2">
-        <span>Hand-selected crystal bracelets designed for your everyday intention.</span>
+        <span>FREE SHIPPING ON ALL ORDERS</span>
       </div>
 
       <header
