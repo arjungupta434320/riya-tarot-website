@@ -140,16 +140,21 @@ export default function Home() {
                 className="min-w-[280px] md:min-w-[320px] flex-shrink-0 snap-center group"
               >
                 <div className="relative aspect-square mb-6 bg-secondary overflow-hidden">
-                  <Image 
-                    src={product.image} 
-                    alt={product.name}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-700"
-                  />
-                  <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  <div className="absolute bottom-0 left-0 w-full p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300 flex gap-2">
+                  <Link href={`/product/${product.id}`} className="block absolute inset-0 z-0">
+                    <Image 
+                      src={product.image} 
+                      alt={product.name}
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-700"
+                    />
+                    <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  </Link>
+                  <div className="absolute bottom-0 left-0 w-full p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300 flex gap-2 z-10">
                     <button 
-                      onClick={() => addToCart(product)}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        addToCart(product);
+                      }}
                       className="flex-1 bg-primary text-secondary text-xs tracking-widest py-3 uppercase hover:bg-accent transition-colors"
                     >
                       Quick Add
