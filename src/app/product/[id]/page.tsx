@@ -51,29 +51,18 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
               <AnimatePresence mode="popLayout">
                 <motion.div
                   key={displayImage}
-                  initial={{ opacity: 0, x: 50 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -50 }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
                   transition={{ duration: 0.3, ease: "easeInOut" }}
-                  className="absolute inset-0 cursor-grab active:cursor-grabbing"
-                  drag="x"
-                  dragConstraints={{ left: 0, right: 0 }}
-                  dragElastic={1}
-                  onDragEnd={(e, { offset, velocity }) => {
-                    const swipe = offset.x;
-                    if (swipe < -50) {
-                      paginate(1);
-                    } else if (swipe > 50) {
-                      paginate(-1);
-                    }
-                  }}
+                  className="absolute inset-0"
                 >
                   <Image 
                     src={displayImage} 
                     alt={product.name}
                     fill
                     priority
-                    className="object-cover pointer-events-none"
+                    className="object-cover"
                   />
                 </motion.div>
               </AnimatePresence>
