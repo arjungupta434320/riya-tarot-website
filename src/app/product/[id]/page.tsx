@@ -6,7 +6,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { products } from "@/data/products";
 import { useStore } from "@/store/useStore";
-import { Star, Heart, Share2, Plus, Minus, ChevronDown, ArrowRight } from "lucide-react";
+import { Star, Heart, Share2, Plus, Minus, ChevronDown, ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { use } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -24,6 +24,14 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
 
   const displayImage = selectedImage || product.image;
   const galleryImages = product.gallery || [product.image];
+  const currentIndex = galleryImages.indexOf(displayImage);
+
+  const paginate = (newDirection: number) => {
+    let nextIndex = currentIndex + newDirection;
+    if (nextIndex < 0) nextIndex = galleryImages.length - 1;
+    if (nextIndex >= galleryImages.length) nextIndex = 0;
+    setSelectedImage(galleryImages[nextIndex]);
+  };
 
   const relatedProducts = products.filter(p => p.id !== product.id && p.category === product.category).slice(0, 3);
   if (relatedProducts.length < 3) {
@@ -39,25 +47,54 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
           
           {/* Images - Left */}
           <div className="w-full md:w-1/2 flex flex-col gap-4">
-            <div className="relative aspect-square bg-secondary w-full overflow-hidden">
-              <AnimatePresence>
+            <div className="relative aspect-square bg-secondary w-full overflow-hidden group">
+              <AnimatePresence mode="popLayout">
                 <motion.div
                   key={displayImage}
-                  initial={{ opacity: 0, x: 80 }}
+                  initial={{ opacity: 0, x: 50 }}
                   animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -80 }}
-                  transition={{ duration: 0.4, ease: "easeInOut" }}
-                  className="absolute inset-0"
+                  exit={{ opacity: 0, x: -50 }}
+                  transition={{ duration: 0.3, ease: "easeInOut" }}
+                  className="absolute inset-0 cursor-grab active:cursor-grabbing"
+                  drag="x"
+                  dragConstraints={{ left: 0, right: 0 }}
+                  dragElastic={1}
+                  onDragEnd={(e, { offset, velocity }) => {
+                    const swipe = offset.x;
+                    if (swipe < -50) {
+                      paginate(1);
+                    } else if (swipe > 50) {
+                      paginate(-1);
+                    }
+                  }}
                 >
                   <Image 
                     src={displayImage} 
                     alt={product.name}
                     fill
                     priority
-                    className="object-cover"
+                    className="object-cover pointer-events-none"
                   />
                 </motion.div>
               </AnimatePresence>
+
+              {/* Slider Arrows */}
+              {galleryImages.length > 1 && (
+                <>
+                  <button 
+                    onClick={() => paginate(-1)}
+                    className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/50 backdrop-blur rounded-full flex items-center justify-center text-primary opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white z-10"
+                  >
+                    <ChevronLeft size={20} />
+                  </button>
+                  <button 
+                    onClick={() => paginate(1)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/50 backdrop-blur rounded-full flex items-center justify-center text-primary opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white z-10"
+                  >
+                    <ChevronRight size={20} />
+                  </button>
+                </>
+              )}
             </div>
             
             {galleryImages.length > 1 && (
