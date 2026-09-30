@@ -7,7 +7,7 @@ import Image from "next/image";
 export default function CartDrawer() {
   const { cart, isCartOpen, toggleCart, updateQuantity, removeFromCart } = useStore();
 
-  const subtotal = cart.reduce((total, item) => total + item.price * item.quantity, 0);
+  const subtotal = cart.reduce((total, item) => total + (item.salePrice || item.price) * item.quantity, 0);
 
   return (
     <>
@@ -64,7 +64,10 @@ export default function CartDrawer() {
                           <X size={16} />
                         </button>
                       </div>
-                      <p className="text-xs text-primary/60 mt-1">₹{item.price.toLocaleString('en-IN')}</p>
+                      <div className="flex items-center gap-2 mt-1">
+                        {item.salePrice && <span className="text-xs text-primary/40 line-through">₹{item.price.toLocaleString('en-IN')}</span>}
+                        <span className="text-xs text-primary">₹{(item.salePrice || item.price).toLocaleString('en-IN')}</span>
+                      </div>
                     </div>
                     <div className="flex items-center gap-4 mt-2">
                       <div className="flex items-center border border-primary/20">

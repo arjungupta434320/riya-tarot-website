@@ -81,7 +81,21 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
             </div>
 
             <h1 className="font-serif text-3xl md:text-4xl lg:text-5xl mb-4">{product.name}</h1>
-            <p className="text-xl md:text-2xl font-light mb-6">₹{product.price.toLocaleString('en-IN')}</p>
+            <div className="flex items-center gap-4 mb-6">
+              <div className="flex items-baseline gap-3">
+                {product.salePrice && (
+                  <span className="text-lg md:text-xl text-primary/40 line-through">₹{product.price.toLocaleString('en-IN')}</span>
+                )}
+                <span className="text-2xl md:text-3xl font-medium text-primary">
+                  ₹{(product.salePrice || product.price).toLocaleString('en-IN')}
+                </span>
+              </div>
+              {product.salePrice && (
+                <span className="text-xs tracking-widest font-bold text-[#b85c38] uppercase animate-pulse border border-[#b85c38]/30 px-3 py-1 rounded bg-[#b85c38]/5">
+                  50% OFF - FLASH SALE
+                </span>
+              )}
+            </div>
             
             <p className="text-sm font-light leading-relaxed text-primary/80 mb-8">
               {product.description}

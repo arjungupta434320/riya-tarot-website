@@ -166,7 +166,19 @@ export default function Home() {
                     <Link href={`/product/${product.id}`}>{product.name}</Link>
                   </h3>
                   <p className="text-xs text-primary/60 font-light mb-2 h-4 truncate">{product.shortIntention}</p>
-                  <p className="text-sm font-medium">₹{product.price.toLocaleString('en-IN')}</p>
+                  <div className="flex flex-col items-center gap-1.5">
+                    <div className="flex items-center gap-2">
+                      {product.salePrice && (
+                        <span className="text-xs text-primary/40 line-through">₹{product.price.toLocaleString('en-IN')}</span>
+                      )}
+                      <span className="text-sm font-medium text-primary">₹{(product.salePrice || product.price).toLocaleString('en-IN')}</span>
+                    </div>
+                    {product.salePrice && (
+                      <span className="text-[10px] tracking-widest font-bold text-[#b85c38] uppercase animate-pulse border border-[#b85c38]/30 px-2 py-0.5 rounded bg-[#b85c38]/5">
+                        50% OFF - LIMITED TIME
+                      </span>
+                    )}
+                  </div>
                 </div>
               </motion.div>
             ))}
