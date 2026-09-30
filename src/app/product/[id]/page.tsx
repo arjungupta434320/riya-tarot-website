@@ -8,6 +8,7 @@ import { products } from "@/data/products";
 import { useStore } from "@/store/useStore";
 import { Star, Heart, Share2, Plus, Minus, ChevronDown, ArrowRight } from "lucide-react";
 import { use } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function ProductPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = use(params);
@@ -39,13 +40,24 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
           {/* Images - Left */}
           <div className="w-full md:w-1/2 flex flex-col gap-4">
             <div className="relative aspect-square bg-secondary w-full overflow-hidden">
-              <Image 
-                src={displayImage} 
-                alt={product.name}
-                fill
-                priority
-                className="object-cover"
-              />
+              <AnimatePresence>
+                <motion.div
+                  key={displayImage}
+                  initial={{ opacity: 0, x: 80 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -80 }}
+                  transition={{ duration: 0.4, ease: "easeInOut" }}
+                  className="absolute inset-0"
+                >
+                  <Image 
+                    src={displayImage} 
+                    alt={product.name}
+                    fill
+                    priority
+                    className="object-cover"
+                  />
+                </motion.div>
+              </AnimatePresence>
             </div>
             
             {galleryImages.length > 1 && (
