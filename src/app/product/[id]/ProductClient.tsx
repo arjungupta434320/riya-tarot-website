@@ -1,18 +1,60 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useStore, Product } from "@/store/useStore";
-import { products as allProducts } from "@/data/products";
-import { Star, Heart, Share2, Plus, Minus, ChevronDown, ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
+import { supabase } from "@/lib/supabase";
+import { Star, Heart, Share2, Plus, Minus, ChevronDown, ArrowRight, ChevronLeft, ChevronRight, User } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
-export default function ProductClient({ product }: { product: Product }) {
+export default function ProductClient({ product, allProducts }: { product: Product, allProducts: Product[] }) {
   const { addToCart } = useStore();
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState("about");
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
+  // Reviews State
+  const [reviews, setReviews] = useState<any[]>([]);
+  const [reviewForm, setReviewForm] = useState({ name: '', rating: 5, text: '' });
+  const [reviewStatus, setReviewStatus] = useState<'idle'|'submitting'|'success'|'error'>('idle');
+
+  useEffect(() => {
+    fetchReviews();
+  }, [product.id]);
+
+  const fetchReviews = async () => {
+    const { data } = await supabase
+      .from('reviews')
+      .select('*')
+      .eq('product_id', product.id)
+      .order('created_at', { ascending: false });
+    if (data) setReviews(data);
+  };
+
+  const submitReview = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setReviewStatus('submitting');
+    
+    const { error } = await supabase.from('reviews').insert({
+      product_id: product.id,
+      author_name: reviewForm.name,
+      rating: reviewForm.rating,
+      review_text: reviewForm.text
+    });
+
+    if (error) {
+      setReviewStatus('error');
+    } else {
+      setReviewStatus('success');
+      setReviewForm({ name: '', rating: 5, text: '' });
+    }
+  };
+
+  const averageRating = reviews.length > 0 
+    ? (reviews.reduce((acc, rev) => acc + rev.rating, 0) / reviews.length).toFixed(1)
+    : "5.0";
+
 
   const displayImage = selectedImage || product.image;
   const galleryImages = product.gallery || [product.image];
@@ -103,11 +145,13 @@ export default function ProductClient({ product }: { product: Product }) {
             
             <div className="flex items-center gap-2 text-accent mb-4">
               <div className="flex">
-                {[1,2,3,4,5].map(i => <Star key={i} size={14} fill="currentColor" />)}
+                {[1,2,3,4,5].map(i => (
+                  <Star key={i} size={14} fill={i <= Math.round(Number(averageRating)) ? "currentColor" : "none"} strokeWidth={i <= Math.round(Number(averageRating)) ? 0 : 1} />
+                ))}
               </div>
-              <span className="text-xs text-primary/60 font-light underline decoration-primary/20 hover:decoration-primary cursor-pointer transition-colors">
-                (12 Reviews)
-              </span>
+              <a href="#reviews" className="text-xs text-primary/60 font-light underline decoration-primary/20 hover:decoration-primary cursor-pointer transition-colors">
+                ({reviews.length} Reviews)
+              </a>
             </div>
 
             <h1 className="font-serif text-3xl md:text-4xl lg:text-5xl mb-4">{product.name}</h1>
@@ -235,6 +279,116 @@ export default function ProductClient({ product }: { product: Product }) {
               <h3 className="text-sm tracking-widest uppercase mb-3">Everyday Elegance</h3>
               <p className="text-sm font-light text-primary/70">Designed to be styled effortlessly with your daily wardrobe.</p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CUSTOMER REVIEWS */}
+      <section id="reviews" className="py-24 bg-white border-t border-primary/10">
+        <div className="container mx-auto px-6 max-w-4xl">
+          <div className="flex flex-col md:flex-row gap-12 md:gap-24 mb-16">
+            
+            {/* Reviews Summary */}
+            <div className="md:w-1/3">
+              <h2 className="font-serif text-3xl mb-4">Customer Reviews</h2>
+              <div className="flex items-center gap-4 mb-2">
+                <span className="text-4xl font-light">{averageRating}</span>
+                <div>
+                  <div className="flex text-accent mb-1">
+                    {[1,2,3,4,5].map(i => (
+                      <Star key={i} size={16} fill={i <= Math.round(Number(averageRating)) ? "currentColor" : "none"} strokeWidth={i <= Math.round(Number(averageRating)) ? 0 : 1} />
+                    ))}
+                  </div>
+                  <span className="text-xs text-primary/60 uppercase tracking-widest">Based on {reviews.length} reviews</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Write a Review */}
+            <div className="md:w-2/3">
+              <h3 className="text-sm tracking-widest uppercase mb-6 font-semibold">Write a Review</h3>
+              
+              {reviewStatus === 'success' ? (
+                <div className="p-6 bg-green-50 border border-green-200 text-green-800 rounded-sm">
+                  <p className="font-semibold mb-2">Thank you for your review!</p>
+                  <p className="text-sm">Your feedback has been submitted and will appear on the site once approved by our team.</p>
+                </div>
+              ) : (
+                <form onSubmit={submitReview} className="space-y-4">
+                  <div className="flex items-center gap-4 mb-2">
+                    <span className="text-sm font-light">Rating:</span>
+                    <div className="flex gap-1 text-accent">
+                      {[1,2,3,4,5].map(i => (
+                        <button type="button" key={i} onClick={() => setReviewForm({...reviewForm, rating: i})}>
+                          <Star size={20} fill={i <= reviewForm.rating ? "currentColor" : "none"} strokeWidth={i <= reviewForm.rating ? 0 : 1} />
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  <input 
+                    type="text" 
+                    placeholder="Your Name" 
+                    required
+                    value={reviewForm.name}
+                    onChange={(e) => setReviewForm({...reviewForm, name: e.target.value})}
+                    className="w-full bg-transparent border border-primary/20 px-4 py-3 focus:outline-none focus:border-primary transition-colors text-sm"
+                  />
+                  
+                  <textarea 
+                    placeholder="Share your experience with this bracelet..." 
+                    required
+                    rows={4}
+                    value={reviewForm.text}
+                    onChange={(e) => setReviewForm({...reviewForm, text: e.target.value})}
+                    className="w-full bg-transparent border border-primary/20 px-4 py-3 focus:outline-none focus:border-primary transition-colors resize-none text-sm"
+                  />
+                  
+                  {reviewStatus === 'error' && <p className="text-red-500 text-sm">Failed to submit review. Please try again.</p>}
+                  
+                  <button 
+                    type="submit" 
+                    disabled={reviewStatus === 'submitting'}
+                    className="px-8 py-3 bg-primary text-secondary tracking-[0.2em] uppercase text-xs hover:bg-accent transition-colors disabled:opacity-50"
+                  >
+                    {reviewStatus === 'submitting' ? 'Submitting...' : 'Submit Review'}
+                  </button>
+                </form>
+              )}
+            </div>
+          </div>
+
+          {/* Reviews List */}
+          <div className="space-y-8">
+            {reviews.length === 0 ? (
+              <p className="text-center text-primary/40 text-sm py-12 border-t border-primary/10">No reviews yet. Be the first to share your experience!</p>
+            ) : (
+              <div className="border-t border-primary/10 pt-12 space-y-12">
+                {reviews.map((review) => (
+                  <div key={review.id} className="border-b border-primary/5 pb-12 last:border-0 last:pb-0">
+                    <div className="flex justify-between items-start mb-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-secondary rounded-full flex items-center justify-center text-primary/40">
+                          <User size={18} />
+                        </div>
+                        <div>
+                          <p className="font-semibold text-sm">{review.author_name}</p>
+                          <p className="text-xs text-primary/40">{new Date(review.created_at).toLocaleDateString()}</p>
+                        </div>
+                      </div>
+                      <div className="flex text-accent">
+                        {[1,2,3,4,5].map(i => (
+                          <Star key={i} size={12} fill={i <= review.rating ? "currentColor" : "none"} strokeWidth={i <= review.rating ? 0 : 1} />
+                        ))}
+                      </div>
+                    </div>
+                    <p className="text-sm font-light leading-relaxed text-primary/80 pl-13">
+                      {review.review_text}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </section>
