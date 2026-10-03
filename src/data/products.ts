@@ -80,5 +80,21 @@ export const products: Product[] = [
       "/images/products/turquoise-v2.jpg"
     ],
     category: "Calm",
+  },
+  {
+    id: "selenite",
+    name: "SELENITE BRACELET",
+    description: "A mesmerizing translucent white Selenite (Satin Spar) bracelet. Known for its distinctive fibrous striations that catch the light, it is traditionally associated with mental clarity, deep peace, and clearing negative energy.",
+    shortIntention: "Clarity • Peace • Purification",
+    price: 4200,
+    salePrice: 2100,
+    image: "/images/products/selenite-main.jpg",
+    gallery: [
+      "/images/products/selenite-main.jpg",
+      "/images/products/selenite-detail.jpg",
+      "/images/products/selenite-lifestyle.jpg",
+      "/images/products/selenite-wrist.jpg"
+    ],
+    category: "Calm",
   }
 ];
