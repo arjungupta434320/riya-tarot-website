@@ -148,7 +148,7 @@ export default function Home() {
                 className="min-w-[280px] md:min-w-[320px] flex-shrink-0 snap-center group"
               >
                 <div className="relative aspect-square mb-6 bg-secondary overflow-hidden">
-                  <Link href={`/product/${product.id}`} className="block absolute inset-0 z-0">
+                  <Link href={`/product?id=${product.id}`} className="block absolute inset-0 z-0">
                     <Image 
                       src={product.image} 
                       alt={product.name}
@@ -171,7 +171,7 @@ export default function Home() {
                 </div>
                 <div className="text-center">
                   <h3 className="text-sm tracking-widest uppercase font-semibold mb-1 hover:text-accent transition-colors cursor-pointer">
-                    <Link href={`/product/${product.id}`}>{product.name}</Link>
+                    <Link href={`/product?id=${product.id}`}>{product.name}</Link>
                   </h3>
                   <p className="text-xs text-primary/60 font-light mb-2 h-4 truncate">{product.shortIntention}</p>
                   <div className="flex flex-col items-center gap-1.5">

@@ -1,17 +1,22 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { products } from "@/data/products";
-import { useStore } from "@/store/useStore";
+import { fetchProducts } from "@/data/products";
+import { useStore, Product } from "@/store/useStore";
 import { SlidersHorizontal, ChevronDown } from "lucide-react";
 
 const categories = ["All", "Love", "Abundance", "Calm", "Protection", "Confidence", "Focus"];
 
 export default function Shop() {
   const [activeCategory, setActiveCategory] = useState("All");
+  const [products, setProducts] = useState<Product[]>([]);
   const { addToCart } = useStore();
+
+  useEffect(() => {
+    fetchProducts().then(setProducts);
+  }, []);
 
   const filteredProducts = activeCategory === "All" 
     ? products 
@@ -56,7 +61,7 @@ export default function Shop() {
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-10 md:gap-x-8 md:gap-y-16">
           {filteredProducts.map((product) => (
             <div key={product.id} className="group flex flex-col h-full">
-              <Link href={`/product/${product.id}`} className="relative aspect-square mb-4 bg-secondary overflow-hidden block">
+              <Link href={`/product?id=${product.id}`} className="relative aspect-square mb-4 bg-secondary overflow-hidden block">
                 <Image 
                   src={product.image} 
                   alt={product.name}
@@ -78,7 +83,7 @@ export default function Shop() {
               </Link>
               <div className="text-center flex flex-col flex-grow">
                 <h3 className="text-sm tracking-widest uppercase font-semibold mb-1 hover:text-accent transition-colors">
-                  <Link href={`/product/${product.id}`}>{product.name}</Link>
+                  <Link href={`/product?id=${product.id}`}>{product.name}</Link>
                 </h3>
                 <p className="text-xs text-primary/60 font-light mb-2 flex-grow">{product.shortIntention}</p>
                 <div className="flex flex-col items-center gap-1.5 mt-auto">

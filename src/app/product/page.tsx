@@ -1,15 +1,23 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useStore, Product } from "@/store/useStore";
 import { supabase } from "@/lib/supabase";
+import { fetchProducts } from "@/data/products";
 import { Star, Heart, Share2, Plus, Minus, ChevronDown, ArrowRight, ChevronLeft, ChevronRight, User } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
-export default function ProductClient({ product, allProducts }: { product: Product, allProducts: Product[] }) {
+function ProductContent() {
+  const searchParams = useSearchParams();
+  const id = searchParams.get('id');
   const { addToCart } = useStore();
+  
+  const [product, setProduct] = useState<Product | null>(null);
+  const [allProducts, setAllProducts] = useState<Product[]>([]);
+  
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState("about");
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -20,10 +28,20 @@ export default function ProductClient({ product, allProducts }: { product: Produ
   const [reviewStatus, setReviewStatus] = useState<'idle'|'submitting'|'success'|'error'>('idle');
 
   useEffect(() => {
-    fetchReviews();
-  }, [product.id]);
+    // Fetch all products
+    fetchProducts().then(products => {
+      setAllProducts(products);
+      const found = products.find(p => p.id === id);
+      if (found) setProduct(found);
+    });
+  }, [id]);
+
+  useEffect(() => {
+    if (product) fetchReviews();
+  }, [product]);
 
   const fetchReviews = async () => {
+    if (!product) return;
     const { data } = await supabase
       .from('reviews')
       .select('*')
@@ -34,6 +52,7 @@ export default function ProductClient({ product, allProducts }: { product: Produ
 
   const submitReview = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!product) return;
     setReviewStatus('submitting');
     
     const { error } = await supabase.from('reviews').insert({
@@ -50,6 +69,12 @@ export default function ProductClient({ product, allProducts }: { product: Produ
       setReviewForm({ name: '', rating: 5, text: '' });
     }
   };
+
+  if (!product) {
+    return <div className="min-h-screen pt-32 pb-24 flex items-center justify-center font-serif text-xl">Loading product...</div>;
+  }
+
+
 
   const averageRating = reviews.length > 0 
     ? (reviews.reduce((acc, rev) => acc + rev.rating, 0) / reviews.length).toFixed(1)
@@ -405,7 +430,7 @@ export default function ProductClient({ product, allProducts }: { product: Produ
           <div className="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-10 md:gap-x-8">
             {relatedProducts.map((p) => (
               <div key={p.id} className="group flex flex-col h-full">
-                <Link href={`/product/${p.id}`} className="relative aspect-square mb-4 bg-secondary overflow-hidden block">
+                <Link href={`/product?id=${p.id}`} className="relative aspect-square mb-4 bg-secondary overflow-hidden block">
                   <Image 
                     src={p.image} 
                     alt={p.name}
@@ -416,7 +441,7 @@ export default function ProductClient({ product, allProducts }: { product: Produ
                 </Link>
                 <div className="text-center flex flex-col flex-grow">
                   <h3 className="text-sm tracking-widest uppercase font-semibold mb-1 hover:text-accent transition-colors">
-                    <Link href={`/product/${p.id}`}>{p.name}</Link>
+                    <Link href={`/product?id=${p.id}`}>{p.name}</Link>
                   </h3>
                   <p className="text-sm font-medium mt-auto">₹{p.price.toLocaleString('en-IN')}</p>
                 </div>
@@ -427,5 +452,13 @@ export default function ProductClient({ product, allProducts }: { product: Produ
       </section>
       
     </div>
+  );
+}
+
+export default function ProductPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen pt-32 pb-24 flex items-center justify-center font-serif text-xl">Loading...</div>}>
+      <ProductContent />
+    </Suspense>
   );
 }
