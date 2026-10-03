@@ -59,7 +59,8 @@ function ProductContent() {
       product_id: product.id,
       author_name: reviewForm.name,
       rating: reviewForm.rating,
-      review_text: reviewForm.text
+      review_text: reviewForm.text,
+      is_approved: true // Auto-approve the review so it shows instantly
     });
 
     if (error) {
@@ -67,6 +68,7 @@ function ProductContent() {
     } else {
       setReviewStatus('success');
       setReviewForm({ name: '', rating: 5, text: '' });
+      fetchReviews(); // Refresh the list to show the new review instantly
     }
   };
 
@@ -336,7 +338,7 @@ function ProductContent() {
               {reviewStatus === 'success' ? (
                 <div className="p-6 bg-green-50 border border-green-200 text-green-800 rounded-sm">
                   <p className="font-semibold mb-2">Thank you for your review!</p>
-                  <p className="text-sm">Your feedback has been submitted and will appear on the site once approved by our team.</p>
+                  <p className="text-sm">Your feedback has been published.</p>
                 </div>
               ) : (
                 <form onSubmit={submitReview} className="space-y-4">
