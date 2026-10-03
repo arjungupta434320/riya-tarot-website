@@ -3,8 +3,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
-import { products } from "@/data/products";
+import React, { useRef } from "react";
+import { fetchProducts } from "@/data/products";
 import { ArrowRight, Star, ShieldCheck, Gift, Lock } from "lucide-react";
 import { useStore } from "@/store/useStore";
 
@@ -28,6 +28,14 @@ export default function Home() {
   const heroRef = useRef(null);
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
   const { addToCart } = useStore();
+  
+  const [dynamicProducts, setDynamicProducts] = React.useState<any[]>([]);
+
+  React.useEffect(() => {
+    fetchProducts().then(setDynamicProducts);
+  }, []);
+
+  const featuredProducts = dynamicProducts.slice(0, 4);
 
   return (
     <div className="bg-background text-primary overflow-hidden">
@@ -130,7 +138,7 @@ export default function Home() {
           </div>
           
           <div className="flex gap-6 overflow-x-auto pb-12 snap-x snap-mandatory hide-scrollbar -mx-6 px-6">
-            {products.slice(0, 6).map((product, idx) => (
+            {dynamicProducts.slice(0, 6).map((product, idx) => (
               <motion.div 
                 key={product.id}
                 initial={{ opacity: 0, x: 50 }}
