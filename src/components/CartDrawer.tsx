@@ -3,8 +3,10 @@
 import { useStore } from "@/store/useStore";
 import { X, Minus, Plus, ShoppingBag } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function CartDrawer() {
+  const router = useRouter();
   const { cart, isCartOpen, toggleCart, updateQuantity, removeFromCart } = useStore();
 
   const subtotal = cart.reduce((total, item) => total + (item.salePrice || item.price) * item.quantity, 0);
@@ -100,7 +102,13 @@ export default function CartDrawer() {
               <span className="font-semibold">₹{subtotal.toLocaleString('en-IN')}</span>
             </div>
             <p className="text-xs text-primary/60 mb-6 font-light">Shipping and taxes calculated at checkout.</p>
-            <button className="w-full py-4 bg-primary text-secondary text-sm tracking-[0.2em] uppercase hover:bg-accent transition-colors magnetic-button">
+            <button 
+              onClick={() => {
+                toggleCart();
+                router.push('/checkout');
+              }}
+              className="w-full py-4 bg-primary text-secondary text-sm tracking-[0.2em] uppercase hover:bg-accent transition-colors magnetic-button"
+            >
               Checkout
             </button>
           </div>

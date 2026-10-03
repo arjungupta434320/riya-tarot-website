@@ -24,6 +24,7 @@ interface StoreState {
   removeFromCart: (productId: string) => void;
   updateQuantity: (productId: string, quantity: number) => void;
   toggleCart: () => void;
+  clearCart: () => void;
   toggleWishlist: (productId: string) => void;
 }
 
@@ -57,6 +58,7 @@ export const useStore = create<StoreState>((set) => ({
       ),
     })),
   toggleCart: () => set((state) => ({ isCartOpen: !state.isCartOpen })),
+  clearCart: () => set({ cart: [] }),
   toggleWishlist: (productId) =>
     set((state) => {
       if (state.wishlist.includes(productId)) {
