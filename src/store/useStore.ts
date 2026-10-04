@@ -20,11 +20,13 @@ interface CartItem extends Product {
 interface StoreState {
   cart: CartItem[];
   isCartOpen: boolean;
+  activeDrawerTab: 'cart' | 'wishlist';
   wishlist: string[];
   addToCart: (product: Product, quantity?: number) => void;
   removeFromCart: (productId: string) => void;
   updateQuantity: (productId: string, quantity: number) => void;
   toggleCart: () => void;
+  setDrawerTab: (tab: 'cart' | 'wishlist') => void;
   clearCart: () => void;
   toggleWishlist: (productId: string) => void;
 }
@@ -34,6 +36,7 @@ export const useStore = create<StoreState>()(
     (set) => ({
       cart: [],
       isCartOpen: false,
+      activeDrawerTab: 'cart',
       wishlist: [],
       addToCart: (product, quantity = 1) =>
         set((state) => {
@@ -61,6 +64,7 @@ export const useStore = create<StoreState>()(
           ),
         })),
       toggleCart: () => set((state) => ({ isCartOpen: !state.isCartOpen })),
+      setDrawerTab: (tab) => set({ activeDrawerTab: tab }),
       clearCart: () => set({ cart: [] }),
       toggleWishlist: (productId) =>
         set((state) => {
