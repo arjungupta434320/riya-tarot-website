@@ -3,7 +3,7 @@
 import { useState, useEffect, Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { useStore, Product } from "@/store/useStore";
 import { supabase } from "@/lib/supabase";
 import { fetchProducts } from "@/data/products";
@@ -11,6 +11,7 @@ import { Star, Heart, Share2, Plus, Minus, ChevronDown, ArrowRight, ChevronLeft,
 import { motion, AnimatePresence } from "framer-motion";
 
 function ProductContent() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const id = searchParams.get('id');
   const { addToCart, wishlist, toggleWishlist } = useStore();
@@ -240,7 +241,14 @@ function ProductContent() {
                 </button>
               </div>
               
-              <button className="w-full border border-primary/20 text-primary text-sm tracking-widest uppercase py-4 hover:bg-secondary transition-colors magnetic-button">
+              <button 
+                onClick={() => {
+                  addToCart(product, quantity);
+                  useStore.setState({ isCartOpen: false });
+                  router.push('/checkout');
+                }}
+                className="w-full border border-primary/20 text-primary text-sm tracking-widest uppercase py-4 hover:bg-secondary transition-colors magnetic-button"
+              >
                 Buy It Now
               </button>
             </div>
