@@ -14,7 +14,7 @@ export default function Footer() {
             <h4 className="text-sm tracking-widest uppercase mb-6 text-accent">Shop</h4>
             <ul className="flex flex-col gap-3 text-sm font-light text-secondary/80">
               <li><Link href="/shop" className="hover:text-white transition-colors">All Bracelets</Link></li>
-              <li><Link href="/collections" className="hover:text-white transition-colors">Collections</Link></li>
+              <li><Link href="/#collections" className="hover:text-white transition-colors">Collections</Link></li>
             </ul>
           </div>
 
