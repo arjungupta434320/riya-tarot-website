@@ -41,8 +41,8 @@ export default function Footer() {
         <div className="border-t border-secondary/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs font-light text-secondary/50">
           <p>© {new Date().getFullYear()} Riya Tarot Crystals. All rights reserved.</p>
           <div className="flex gap-4">
-            <a href="#" className="hover:text-white transition-colors">Instagram</a>
-            <a href="#" className="hover:text-white transition-colors">WhatsApp</a>
+            <a href="https://www.instagram.com/riya__tarot" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Instagram</a>
+            <a href="https://wa.me/7889001587" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">WhatsApp</a>
           </div>
         </div>
       </div>
