@@ -8,7 +8,7 @@ import { useStore } from "@/store/useStore";
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { cart, toggleCart } = useStore();
+  const { cart, wishlist, toggleCart, setDrawerTab } = useStore();
 
   const cartItemsCount = cart.reduce((total, item) => total + item.quantity, 0);
 
@@ -63,8 +63,27 @@ export default function Navbar() {
         <div className="absolute right-4 md:right-6 flex items-center justify-end gap-3 sm:gap-4 md:gap-6 z-50">
           <button className="hidden md:block hover:text-accent transition-colors"><Search size={20} /></button>
           <button className="hidden md:block hover:text-accent transition-colors"><User size={20} /></button>
-          <button className="hidden md:block hover:text-accent transition-colors"><Heart size={20} /></button>
-          <button onClick={toggleCart} className="hover:text-accent transition-colors relative p-2 -mr-2 md:p-0 md:mr-0">
+          <button 
+            onClick={() => {
+              setDrawerTab('wishlist');
+              toggleCart();
+            }}
+            className="hidden md:block hover:text-accent transition-colors relative"
+          >
+            <Heart size={20} />
+            {wishlist.length > 0 && (
+              <span className="absolute -top-2 -right-2 bg-accent text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full">
+                {wishlist.length}
+              </span>
+            )}
+          </button>
+          <button 
+            onClick={() => {
+              setDrawerTab('cart');
+              toggleCart();
+            }}
+            className="hover:text-accent transition-colors relative p-2 -mr-2 md:p-0 md:mr-0"
+          >
             <ShoppingCart size={24} className="md:w-5 md:h-5" />
             {cartItemsCount > 0 && (
               <span className="absolute top-0 right-0 md:-top-2 md:-right-2 bg-accent text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full">
@@ -87,7 +106,21 @@ export default function Navbar() {
           <div className="flex gap-8 mt-6">
             <button className="hover:text-accent transition-colors"><Search size={24} /></button>
             <button className="hover:text-accent transition-colors"><User size={24} /></button>
-            <button className="hover:text-accent transition-colors"><Heart size={24} /></button>
+            <button 
+              onClick={() => {
+                setIsMobileMenuOpen(false);
+                setDrawerTab('wishlist');
+                toggleCart();
+              }}
+              className="hover:text-accent transition-colors relative"
+            >
+              <Heart size={24} />
+              {wishlist.length > 0 && (
+                <span className="absolute -top-2 -right-2 bg-accent text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full">
+                  {wishlist.length}
+                </span>
+              )}
+            </button>
           </div>
         </div>
       )}
