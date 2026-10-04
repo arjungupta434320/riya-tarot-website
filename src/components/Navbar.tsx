@@ -2,12 +2,17 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Search, Heart, ShoppingCart, User, Menu, X } from "lucide-react";
 import { useStore } from "@/store/useStore";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const router = useRouter();
   const { cart, wishlist, toggleCart, setDrawerTab } = useStore();
 
   const cartItemsCount = cart.reduce((total, item) => total + item.quantity, 0);
@@ -17,6 +22,16 @@ export default function Navbar() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      setIsSearchOpen(false);
+      setIsMobileMenuOpen(false);
+      router.push(`/shop?search=${encodeURIComponent(searchQuery.trim())}`);
+      setSearchQuery("");
+    }
+  };
 
   return (
     <>
@@ -48,6 +63,7 @@ export default function Navbar() {
             <Link href="/shop" className="hover:text-accent transition-colors">Shop All</Link>
             <Link href="/#collections" className="hover:text-accent transition-colors">Collections</Link>
             <Link href="/about" className="hover:text-accent transition-colors">About Us</Link>
+            <Link href="/policies/terms" className="hover:text-accent transition-colors">Policies</Link>
           </nav>
         </div>
 
@@ -62,7 +78,7 @@ export default function Navbar() {
 
         {/* Right Nav */}
         <div className="absolute right-4 md:right-6 flex items-center justify-end gap-3 sm:gap-4 md:gap-6 z-50">
-          <button className="hidden md:block hover:text-accent transition-colors"><Search size={20} /></button>
+          <button onClick={() => setIsSearchOpen(!isSearchOpen)} className="hidden md:block hover:text-accent transition-colors"><Search size={20} /></button>
           <button className="hidden md:block hover:text-accent transition-colors"><User size={20} /></button>
           <button 
             onClick={() => {
@@ -95,16 +111,46 @@ export default function Navbar() {
         </div>
       </div>
 
+      {/* Search Dropdown */}
+      <AnimatePresence>
+        {isSearchOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            className="absolute top-full left-0 w-full bg-background border-b border-primary/10 overflow-hidden z-[45]"
+          >
+            <div className="container mx-auto px-6 py-6">
+              <form onSubmit={handleSearchSubmit} className="relative max-w-2xl mx-auto flex items-center">
+                <Search size={20} className="absolute left-4 text-primary/40" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search for crystals, intentions, bracelets..."
+                  className="w-full bg-secondary/50 border border-primary/20 py-4 pl-12 pr-4 focus:outline-none focus:border-primary transition-colors text-sm"
+                  autoFocus
+                />
+                <button type="submit" className="absolute right-4 text-xs font-semibold tracking-widest uppercase hover:text-accent transition-colors">
+                  Search
+                </button>
+              </form>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Mobile/Tablet Menu Dropdown */}
       {isMobileMenuOpen && (
         <div className="xl:hidden absolute top-full left-0 w-full bg-background/95 backdrop-blur-md border-t border-warm-beige/30 py-6 px-6 flex flex-col gap-4 shadow-2xl z-[100] h-screen">
           <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="text-base tracking-widest uppercase py-3 border-b border-warm-beige/20 text-foreground">Home</Link>
           <Link href="/shop" onClick={() => setIsMobileMenuOpen(false)} className="text-base tracking-widest uppercase py-3 border-b border-warm-beige/20 text-foreground">Shop All</Link>
           <Link href="/#collections" onClick={() => setIsMobileMenuOpen(false)} className="text-base tracking-widest uppercase py-3 border-b border-warm-beige/20 text-foreground">Collections</Link>
-          <Link href="/about" onClick={() => setIsMobileMenuOpen(false)} className="text-base tracking-widest uppercase py-3 text-foreground">About Us</Link>
+          <Link href="/about" onClick={() => setIsMobileMenuOpen(false)} className="text-base tracking-widest uppercase py-3 border-b border-warm-beige/20 text-foreground">About Us</Link>
+          <Link href="/policies/terms" onClick={() => setIsMobileMenuOpen(false)} className="text-base tracking-widest uppercase py-3 text-foreground">Policies</Link>
           
           <div className="flex gap-8 mt-6">
-            <button className="hover:text-accent transition-colors"><Search size={24} /></button>
+            <button onClick={() => { setIsSearchOpen(!isSearchOpen); setIsMobileMenuOpen(false); }} className="hover:text-accent transition-colors"><Search size={24} /></button>
             <button className="hover:text-accent transition-colors"><User size={24} /></button>
             <button 
               onClick={() => {

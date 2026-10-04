@@ -1,31 +1,55 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { fetchProducts } from "@/data/products";
 import { useStore, Product } from "@/store/useStore";
 import { SlidersHorizontal, ChevronDown } from "lucide-react";
 
 const categories = ["All", "Love", "Abundance", "Calm", "Protection", "Confidence", "Focus"];
 
-export default function Shop() {
+function ShopContent() {
   const [activeCategory, setActiveCategory] = useState("All");
   const [products, setProducts] = useState<Product[]>([]);
   const { addToCart } = useStore();
+  
+  const searchParams = useSearchParams();
+  const searchQuery = searchParams.get("search")?.toLowerCase() || "";
 
   useEffect(() => {
     fetchProducts().then(setProducts);
   }, []);
 
-  const filteredProducts = activeCategory === "All" 
-    ? products 
-    : products.filter(p => p.category === activeCategory);
+  const filteredProducts = products.filter(p => {
+    const matchesCategory = activeCategory === "All" || p.category === activeCategory;
+    const matchesSearch = !searchQuery || 
+      p.name.toLowerCase().includes(searchQuery) || 
+      p.description.toLowerCase().includes(searchQuery) || 
+      (p.shortIntention && p.shortIntention.toLowerCase().includes(searchQuery));
+      
+    return matchesCategory && matchesSearch;
+  });
 
   return (
     <div className="min-h-screen pt-32 pb-24 bg-background">
       <div className="container mx-auto px-6">
         
+        {searchQuery && (
+          <div className="mb-8">
+            <h1 className="font-serif text-2xl md:text-3xl text-primary">
+              Search results for "{searchQuery}"
+            </h1>
+            <button 
+              onClick={() => window.location.href = '/shop'} 
+              className="text-xs tracking-widest uppercase border-b border-primary/20 text-primary/60 hover:text-primary mt-4"
+            >
+              Clear Search
+            </button>
+          </div>
+        )}
+
         <div className="flex flex-col md:flex-row justify-between items-end mb-12 border-b border-primary/10 pb-8">
           <div>
           </div>
@@ -106,5 +130,13 @@ export default function Shop() {
 
       </div>
     </div>
+  );
+}
+
+export default function Shop() {
+  return (
+    <Suspense fallback={<div className="min-h-screen pt-32 pb-24 bg-background flex justify-center"><div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin"></div></div>}>
+      <ShopContent />
+    </Suspense>
   );
 }
