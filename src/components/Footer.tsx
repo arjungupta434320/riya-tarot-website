@@ -42,14 +42,14 @@ export default function Footer() {
           <div>
             <h4 className="text-sm tracking-widest uppercase mb-6 text-accent">Help & Legal</h4>
             <ul className="flex flex-col gap-3 text-sm font-light text-secondary/80 mb-6">
-              <li><Link href="/contact" className="hover:text-white transition-colors">Contact</Link></li>
-              <li><Link href="/shipping" className="hover:text-white transition-colors">Shipping & Returns</Link></li>
-              <li><Link href="/faq" className="hover:text-white transition-colors">FAQs</Link></li>
+              <li><Link href="/policies/contact" className="hover:text-white transition-colors">Contact Us</Link></li>
+              <li><Link href="/policies/shipping" className="hover:text-white transition-colors">Shipping & Delivery</Link></li>
+              <li><Link href="/policies/refunds" className="hover:text-white transition-colors">Cancellation & Refunds</Link></li>
               <li><Link href="/care" className="hover:text-white transition-colors">Care Guide</Link></li>
             </ul>
             <ul className="flex flex-col gap-3 text-sm font-light text-secondary/80">
-              <li><Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link></li>
-              <li><Link href="/terms" className="hover:text-white transition-colors">Terms & Conditions</Link></li>
+              <li><Link href="/policies/privacy" className="hover:text-white transition-colors">Privacy Policy</Link></li>
+              <li><Link href="/policies/terms" className="hover:text-white transition-colors">Terms & Conditions</Link></li>
             </ul>
           </div>
 
