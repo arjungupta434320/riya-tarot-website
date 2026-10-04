@@ -25,7 +25,22 @@ export default function CheckoutPage() {
     pincode: ""
   });
 
+  const [discountInput, setDiscountInput] = useState("");
+  const [discountCode, setDiscountCode] = useState<string | null>(null);
+  const [discountError, setDiscountError] = useState("");
+
   const subtotal = cart.reduce((total, item) => total + (item.salePrice || item.price) * item.quantity, 0);
+  const discountAmount = discountCode === "WELCOME20" ? subtotal * 0.20 : 0;
+  const finalTotal = subtotal - discountAmount;
+
+  const handleApplyDiscount = () => {
+    if (discountInput.trim().toUpperCase() === "WELCOME20") {
+      setDiscountCode("WELCOME20");
+      setDiscountError("");
+    } else {
+      setDiscountError("Invalid discount code");
+    }
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
@@ -58,7 +73,7 @@ export default function CheckoutPage() {
       const orderRes = await fetch("/api/razorpay/create-order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ amount: subtotal })
+        body: JSON.stringify({ amount: finalTotal })
       });
       
       const orderData = await orderRes.json();
@@ -92,7 +107,7 @@ export default function CheckoutPage() {
                    customer_email: formData.email,
                    customer_phone: formData.phone,
                    shipping_address: fullAddress,
-                   total_amount: subtotal,
+                   total_amount: finalTotal,
                    items: cart,
                    status: 'paid'
                  });
@@ -291,17 +306,48 @@ export default function CheckoutPage() {
                     <span>Subtotal</span>
                     <span>₹{subtotal.toLocaleString('en-IN')}</span>
                   </div>
+
+                  {discountAmount > 0 && (
+                    <div className="flex justify-between text-sm text-[#b85c38]">
+                      <span>Discount (WELCOME20)</span>
+                      <span>- ₹{discountAmount.toLocaleString('en-IN')}</span>
+                    </div>
+                  )}
+
                   <div className="flex justify-between text-sm text-primary/60">
                     <span>Shipping</span>
                     <span>Free</span>
                   </div>
                 </div>
 
-                <div className="border-t border-primary/20 pt-4 flex justify-between items-end">
+                <div className="border-t border-primary/20 pt-4 pb-6 border-b mb-6">
+                  <p className="text-xs uppercase tracking-widest text-primary/60 mb-2">Discount Code</p>
+                  <div className="flex gap-2">
+                    <input 
+                      type="text" 
+                      value={discountInput}
+                      onChange={(e) => setDiscountInput(e.target.value)}
+                      placeholder="Enter code" 
+                      className="flex-grow bg-transparent border border-primary/20 px-3 py-2 text-sm focus:outline-none focus:border-primary uppercase"
+                      disabled={!!discountCode}
+                    />
+                    <button 
+                      type="button"
+                      onClick={handleApplyDiscount}
+                      disabled={!!discountCode}
+                      className="px-4 bg-primary text-secondary text-xs uppercase tracking-widest hover:bg-accent transition-colors disabled:opacity-50"
+                    >
+                      {discountCode ? "Applied" : "Apply"}
+                    </button>
+                  </div>
+                  {discountError && <p className="text-red-500 text-xs mt-2">{discountError}</p>}
+                </div>
+
+                <div className="flex justify-between items-end">
                   <span className="text-sm font-semibold uppercase tracking-widest">Total</span>
                   <div className="text-right">
                     <span className="text-xs text-primary/40 block">INR</span>
-                    <span className="text-2xl font-medium">₹{subtotal.toLocaleString('en-IN')}</span>
+                    <span className="text-2xl font-medium">₹{finalTotal.toLocaleString('en-IN')}</span>
                   </div>
                 </div>
 

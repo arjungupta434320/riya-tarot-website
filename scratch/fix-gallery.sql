@@ -1,0 +1,6 @@
+update products set gallery = '["/images/products/citrine-main.jpg", "/images/products/citrine-1.jpg", "/images/products/citrine-2.jpg", "/images/products/citrine-v2.jpg"]'::jsonb where id = 'citrine';
+update products set gallery = '["/images/products/tiger-eye-main.jpg", "/images/products/tiger-eye-1.jpg", "/images/products/tiger-eye-2.jpg", "/images/products/tiger-eye-celeb-v2.jpg"]'::jsonb where id = 'tiger-eye-celeb';
+update products set gallery = '["/images/products/love-attraction-main.jpg", "/images/products/love-attraction-1.jpg", "/images/products/love-attraction-2.jpg", "/images/products/love-attraction-v2.jpg"]'::jsonb where id = 'love-attraction';
+update products set gallery = '["/images/products/red-carnelian-main.jpg", "/images/products/red-carnelian-1.jpg", "/images/products/red-carnelian-2.jpg", "/images/products/red-carnelian-v2.jpg"]'::jsonb where id = 'red-carnelian';
+update products set gallery = '["/images/products/turquoise-main.jpg", "/images/products/turquoise-1.jpg", "/images/products/turquoise-2.jpg", "/images/products/turquoise-v2.jpg"]'::jsonb where id = 'turquoise';
+update products set gallery = '["/images/products/dhan-yog-main.jpg", "/images/products/dhan-yog-1.jpg", "/images/products/dhan-yog-2.jpg", "/images/products/dhan-yog-v2.jpg"]'::jsonb where id = 'dhan-yog';

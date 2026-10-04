@@ -79,7 +79,7 @@ export default function Navbar() {
         {/* Right Nav */}
         <div className="absolute right-4 md:right-6 flex items-center justify-end gap-3 sm:gap-4 md:gap-6 z-50">
           <button onClick={() => setIsSearchOpen(!isSearchOpen)} className="hidden md:block hover:text-accent transition-colors"><Search size={20} /></button>
-          <button className="hidden md:block hover:text-accent transition-colors"><User size={20} /></button>
+          <Link href="/account" className="hidden md:block hover:text-accent transition-colors"><User size={20} /></Link>
           <button 
             onClick={() => {
               setDrawerTab('wishlist');
@@ -151,7 +151,7 @@ export default function Navbar() {
           
           <div className="flex gap-8 mt-6">
             <button onClick={() => { setIsSearchOpen(!isSearchOpen); setIsMobileMenuOpen(false); }} className="hover:text-accent transition-colors"><Search size={24} /></button>
-            <button className="hover:text-accent transition-colors"><User size={24} /></button>
+            <Link href="/account" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-accent transition-colors"><User size={24} /></Link>
             <button 
               onClick={() => {
                 setIsMobileMenuOpen(false);
