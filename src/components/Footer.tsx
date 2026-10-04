@@ -8,19 +8,6 @@ export default function Footer() {
           
           <div className="md:col-span-1">
             <h3 className="font-serif text-2xl mb-6 tracking-widest">RIYA TAROT CRYSTALS</h3>
-            <p className="text-sm text-secondary/80 font-light leading-relaxed mb-6">
-              "Receive crystal stories, new drops & exclusive offers."
-            </p>
-            <div className="flex">
-              <input 
-                type="email" 
-                placeholder="Email address" 
-                className="bg-transparent border-b border-secondary/30 pb-2 text-sm focus:outline-none focus:border-accent w-full transition-colors"
-              />
-              <button className="text-xs uppercase tracking-widest border-b border-secondary/30 pb-2 hover:text-accent transition-colors">
-                Subscribe
-              </button>
-            </div>
           </div>
 
           <div>
@@ -41,13 +28,10 @@ export default function Footer() {
 
           <div>
             <h4 className="text-sm tracking-widest uppercase mb-6 text-accent">Help & Legal</h4>
-            <ul className="flex flex-col gap-3 text-sm font-light text-secondary/80 mb-6">
+            <ul className="flex flex-col gap-3 text-sm font-light text-secondary/80">
               <li><Link href="/policies/contact" className="hover:text-white transition-colors">Contact Us</Link></li>
               <li><Link href="/policies/shipping" className="hover:text-white transition-colors">Shipping & Delivery</Link></li>
               <li><Link href="/policies/refunds" className="hover:text-white transition-colors">Cancellation & Refunds</Link></li>
-              <li><Link href="/care" className="hover:text-white transition-colors">Care Guide</Link></li>
-            </ul>
-            <ul className="flex flex-col gap-3 text-sm font-light text-secondary/80">
               <li><Link href="/policies/privacy" className="hover:text-white transition-colors">Privacy Policy</Link></li>
               <li><Link href="/policies/terms" className="hover:text-white transition-colors">Terms & Conditions</Link></li>
             </ul>

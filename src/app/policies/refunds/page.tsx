@@ -21,9 +21,6 @@ export default function RefundsPage() {
 
           <h2 className="text-xl font-serif mt-8 mb-4 text-primary">3. Refunds</h2>
           <p className="mb-4">Once your return is received and inspected, we will notify you of the approval or rejection of your refund. If approved, your refund will be processed automatically to your original method of payment (via Razorpay) within 5-7 business days.</p>
-
-          <h2 className="text-xl font-serif mt-8 mb-4 text-primary">4. Exchanges</h2>
-          <p className="mb-4">We only replace items if they are defective or damaged during transit. If you need to exchange an item, please contact us at riyatarotcrystals@example.com.</p>
         </div>
       </div>
     </div>
