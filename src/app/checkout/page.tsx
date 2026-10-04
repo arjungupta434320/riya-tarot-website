@@ -66,7 +66,7 @@ export default function CheckoutPage() {
 
       // 2. Open Razorpay Checkout Modal
       const options = {
-        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID, 
+        key: orderData.key_id, 
         amount: orderData.amount, 
         currency: orderData.currency,
         name: "Riya Tarot Crystals",

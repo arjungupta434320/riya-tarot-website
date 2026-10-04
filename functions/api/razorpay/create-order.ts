@@ -27,7 +27,7 @@ export async function onRequestPost(context: any) {
     
     const data = await response.json();
     
-    return new Response(JSON.stringify(data), {
+    return new Response(JSON.stringify({ ...data, key_id: keyId }), {
       headers: { "Content-Type": "application/json" }
     });
   } catch (error: any) {
