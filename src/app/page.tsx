@@ -16,11 +16,11 @@ const trustFeatures = [
 ];
 
 const intentions = [
-  { name: "LOVE", image: "/images/products/love-attraction-main.jpg" },
-  { name: "CALM", image: "/images/products/turquoise-main.jpg" },
-  { name: "PROTECTION", image: "/images/products/red-carnelian-main.jpg" },
-  { name: "CONFIDENCE", image: "/images/products/tiger-eye-main.jpg" },
-  { name: "FOCUS", image: "/images/products/citrine-main.jpg" },
+  { name: "LOVE", image: "/images/products/love-attraction-main.jpg", id: "love-attraction" },
+  { name: "CALM", image: "/images/products/turquoise-main.jpg", id: "turquoise" },
+  { name: "PROTECTION", image: "/images/products/red-carnelian-main.jpg", id: "red-carnelian" },
+  { name: "CONFIDENCE", image: "/images/products/tiger-eye-main.jpg", id: "tiger-eye-celeb" },
+  { name: "FOCUS", image: "/images/products/citrine-main.jpg", id: "citrine" },
 ];
 
 export default function Home() {
@@ -100,7 +100,7 @@ export default function Home() {
         <div className="container mx-auto px-6">
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-8">
             {intentions.map((intention, idx) => (
-              <Link href="/shop" key={idx}>
+              <Link href={`/product?id=${intention.id}`} key={idx}>
                 <motion.div 
                   initial={{ opacity: 0, scale: 0.95 }}
                   whileInView={{ opacity: 1, scale: 1 }}
