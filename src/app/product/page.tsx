@@ -13,7 +13,7 @@ import { motion, AnimatePresence } from "framer-motion";
 function ProductContent() {
   const searchParams = useSearchParams();
   const id = searchParams.get('id');
-  const { addToCart } = useStore();
+  const { addToCart, wishlist, toggleWishlist } = useStore();
   
   const [product, setProduct] = useState<Product | null>(null);
   const [allProducts, setAllProducts] = useState<Product[]>([]);
@@ -246,10 +246,32 @@ function ProductContent() {
             </div>
 
             <div className="flex gap-6 text-sm text-primary/60">
-              <button className="flex items-center gap-2 hover:text-primary transition-colors">
-                <Heart size={16} /> Add to Wishlist
+              <button 
+                onClick={() => toggleWishlist(product.id)}
+                className={`flex items-center gap-2 transition-colors ${wishlist.includes(product.id) ? 'text-accent' : 'hover:text-primary'}`}
+              >
+                <Heart size={16} fill={wishlist.includes(product.id) ? "currentColor" : "none"} /> 
+                {wishlist.includes(product.id) ? 'Saved to Wishlist' : 'Add to Wishlist'}
               </button>
-              <button className="flex items-center gap-2 hover:text-primary transition-colors">
+              <button 
+                onClick={async () => {
+                  if (navigator.share) {
+                    try {
+                      await navigator.share({
+                        title: product.name,
+                        text: `Check out this ${product.name} at Riya Tarot Crystals!`,
+                        url: window.location.href,
+                      });
+                    } catch (err) {
+                      console.log('Error sharing:', err);
+                    }
+                  } else {
+                    navigator.clipboard.writeText(window.location.href);
+                    alert("Link copied to clipboard!");
+                  }
+                }}
+                className="flex items-center gap-2 hover:text-primary transition-colors"
+              >
                 <Share2 size={16} /> Share
               </button>
             </div>
