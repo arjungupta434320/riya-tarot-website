@@ -25,9 +25,10 @@ function ShopContent() {
   const filteredProducts = products.filter(p => {
     const matchesCategory = activeCategory === "All" || p.category === activeCategory;
     const matchesSearch = !searchQuery || 
-      p.name.toLowerCase().includes(searchQuery) || 
-      p.description.toLowerCase().includes(searchQuery) || 
-      (p.shortIntention && p.shortIntention.toLowerCase().includes(searchQuery));
+      (p.name && p.name.toLowerCase().includes(searchQuery)) || 
+      (p.description && p.description.toLowerCase().includes(searchQuery)) || 
+      (p.shortIntention && p.shortIntention.toLowerCase().includes(searchQuery)) ||
+      (p.category && p.category.toLowerCase().includes(searchQuery));
       
     return matchesCategory && matchesSearch;
   });
