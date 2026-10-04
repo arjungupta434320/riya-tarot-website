@@ -23,7 +23,7 @@ export default function ContactPage() {
                 <Mail className="text-accent mt-1" size={20} />
                 <div>
                   <h3 className="font-medium text-primary">Email Support</h3>
-                  <p className="text-primary/70 text-sm mt-1">riyatarotcrystals@example.com</p>
+                  <p className="text-primary/70 text-sm mt-1">auracrystalstarot2@gmail.com</p>
                   <p className="text-primary/50 text-xs mt-1">We aim to reply within 24 hours.</p>
                 </div>
               </div>
@@ -32,7 +32,7 @@ export default function ContactPage() {
                 <Phone className="text-accent mt-1" size={20} />
                 <div>
                   <h3 className="font-medium text-primary">Phone</h3>
-                  <p className="text-primary/70 text-sm mt-1">+91 98765 43210</p>
+                  <p className="text-primary/70 text-sm mt-1">+91 7889001587</p>
                   <p className="text-primary/50 text-xs mt-1">Mon-Fri, 10am to 6pm IST</p>
                 </div>
               </div>
@@ -42,10 +42,9 @@ export default function ContactPage() {
                 <div>
                   <h3 className="font-medium text-primary">Operating Address</h3>
                   <p className="text-primary/70 text-sm mt-1">
-                    123 Crystal Avenue<br />
-                    Spiritual District<br />
-                    New Delhi, 110001<br />
-                    India
+                    Omaxe Eternity<br />
+                    Vrindavan, 281121<br />
+                    Uttar Pradesh, India
                   </p>
                 </div>
               </div>
