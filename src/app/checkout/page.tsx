@@ -31,6 +31,14 @@ export default function CheckoutPage() {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
+  const loadRazorpay = () => new Promise((resolve) => {
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.onload = () => resolve(true);
+    script.onerror = () => resolve(false);
+    document.body.appendChild(script);
+  });
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (cart.length === 0) return;
@@ -38,30 +46,90 @@ export default function CheckoutPage() {
     setLoading(true);
     setError(null);
 
-    const fullAddress = `${formData.address}, ${formData.city}, ${formData.pincode}`;
-
-    const { error: submitError } = await supabase
-      .from('orders')
-      .insert({
-        customer_name: formData.name,
-        customer_email: formData.email,
-        customer_phone: formData.phone,
-        shipping_address: fullAddress,
-        total_amount: subtotal,
-        items: cart,
-        status: 'pending' // pending payment or manual confirmation
-      });
-
-    if (submitError) {
-      console.error(submitError);
-      setError("Something went wrong saving your order. Please try again.");
+    const isSdkLoaded = await loadRazorpay();
+    if (!isSdkLoaded) {
+      setError("Payment gateway failed to load. Please check your connection.");
       setLoading(false);
       return;
     }
 
-    setSuccess(true);
-    clearCart();
-    setLoading(false);
+    try {
+      // 1. Create Razorpay order via Cloudflare function
+      const orderRes = await fetch("/api/razorpay/create-order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ amount: subtotal })
+      });
+      
+      const orderData = await orderRes.json();
+      if (!orderData.id) throw new Error("Failed to initialize payment");
+
+      // 2. Open Razorpay Checkout Modal
+      const options = {
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID, 
+        amount: orderData.amount, 
+        currency: orderData.currency,
+        name: "Riya Tarot Crystals",
+        description: "Premium Spiritual Jewelry",
+        order_id: orderData.id, 
+        handler: async function (response: any) {
+          try {
+            // 3. Verify Payment
+            const verifyRes = await fetch("/api/razorpay/verify", {
+               method: "POST",
+               headers: { "Content-Type": "application/json" },
+               body: JSON.stringify(response)
+            });
+            const verifyData = await verifyRes.json();
+            
+            if (verifyData.success) {
+               // 4. Save confirmed order to Supabase
+               const fullAddress = `${formData.address}, ${formData.city}, ${formData.pincode}`;
+               const { error: submitError } = await supabase
+                 .from('orders')
+                 .insert({
+                   customer_name: formData.name,
+                   customer_email: formData.email,
+                   customer_phone: formData.phone,
+                   shipping_address: fullAddress,
+                   total_amount: subtotal,
+                   items: cart,
+                   status: 'paid'
+                 });
+                 
+               if (submitError) throw submitError;
+               
+               setSuccess(true);
+               clearCart();
+            } else {
+               setError("Payment verification failed. Please contact support.");
+            }
+          } catch (err) {
+            setError("Error recording order. Please contact support.");
+          }
+        },
+        prefill: {
+            name: formData.name,
+            email: formData.email,
+            contact: formData.phone
+        },
+        theme: {
+            color: "#4f4136" // our primary brand color
+        }
+      };
+      
+      const rzp = new (window as any).Razorpay(options);
+      rzp.on("payment.failed", function (response: any) {
+        setError(response.error.description);
+      });
+      rzp.open();
+      
+    } catch (err: any) {
+       console.error(err);
+       setError("Something went wrong. Please try again.");
+    } finally {
+       setLoading(false);
+    }
   };
 
   if (success) {
