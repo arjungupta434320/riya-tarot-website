@@ -47,6 +47,7 @@ export default function Navbar() {
             <Link href="/" className="hover:text-accent transition-colors">Home</Link>
             <Link href="/shop" className="hover:text-accent transition-colors">Shop All</Link>
             <Link href="/#collections" className="hover:text-accent transition-colors">Collections</Link>
+            <Link href="/about" className="hover:text-accent transition-colors">About Us</Link>
           </nav>
         </div>
 
@@ -100,8 +101,7 @@ export default function Navbar() {
           <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="text-base tracking-widest uppercase py-3 border-b border-warm-beige/20 text-foreground">Home</Link>
           <Link href="/shop" onClick={() => setIsMobileMenuOpen(false)} className="text-base tracking-widest uppercase py-3 border-b border-warm-beige/20 text-foreground">Shop All</Link>
           <Link href="/#collections" onClick={() => setIsMobileMenuOpen(false)} className="text-base tracking-widest uppercase py-3 border-b border-warm-beige/20 text-foreground">Collections</Link>
-          <Link href="/#ritual" onClick={() => setIsMobileMenuOpen(false)} className="text-base tracking-widest uppercase py-3 border-b border-warm-beige/20 text-foreground">Our Ritual</Link>
-          <Link href="/#about" onClick={() => setIsMobileMenuOpen(false)} className="text-base tracking-widest uppercase py-3 text-foreground">Our Story</Link>
+          <Link href="/about" onClick={() => setIsMobileMenuOpen(false)} className="text-base tracking-widest uppercase py-3 text-foreground">About Us</Link>
           
           <div className="flex gap-8 mt-6">
             <button className="hover:text-accent transition-colors"><Search size={24} /></button>

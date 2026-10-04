@@ -21,8 +21,7 @@ export default function Footer() {
           <div>
             <h4 className="text-sm tracking-widest uppercase mb-6 text-accent">About</h4>
             <ul className="flex flex-col gap-3 text-sm font-light text-secondary/80">
-              <li><Link href="/about" className="hover:text-white transition-colors">Our Story</Link></li>
-              <li><Link href="/ritual" className="hover:text-white transition-colors">Our Ritual</Link></li>
+              <li><Link href="/about" className="hover:text-white transition-colors">About Us</Link></li>
             </ul>
           </div>
 

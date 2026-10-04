@@ -194,50 +194,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* THE RITUAL */}
-      <section id="ritual" className="py-16 md:py-24 bg-primary text-secondary">
-        <div className="container mx-auto px-6">
-
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-4 relative">
-            {/* Connecting line */}
-            <div className="hidden md:block absolute top-12 left-1/8 right-1/8 h-px bg-secondary/20"></div>
-
-            {[
-              { num: "01", title: "SELECT", desc: "Choose the bracelet that resonates with your intention." },
-              { num: "02", title: "PREPARE", desc: "Your bracelet is prepared with care as part of our spiritual ritual." },
-              { num: "03", title: "INTEND", desc: "Take a moment to set a personal intention when you receive it." },
-              { num: "04", title: "WEAR", desc: "Make it part of your everyday ritual and personal style." }
-            ].map((step, idx) => (
-              <motion.div 
-                key={idx}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ delay: idx * 0.2 }}
-                className="text-center relative z-10"
-              >
-                <div className="w-24 h-24 mx-auto rounded-full border border-secondary/20 flex items-center justify-center bg-primary mb-6">
-                  <span className="font-serif text-3xl text-accent">{step.num}</span>
-                </div>
-                <h3 className="text-sm tracking-widest uppercase mb-3">{step.title}</h3>
-                <p className="text-sm text-secondary/70 font-light px-4">{step.desc}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ABOUT PREVIEW */}
-      <section id="about" className="py-16 md:py-24 bg-background">
-        <div className="container mx-auto px-6 max-w-4xl text-center">
-          <p className="text-lg font-light text-primary/80 mb-10 leading-relaxed">
-            We believe in the power of intention. Our premium crystal bracelets are hand-selected not just for their natural beauty, but to serve as a daily reminder of what you are calling into your life. Through mindful gifting and personal rituals, we bring traditional symbolism into contemporary everyday style.
-          </p>
-          <Link href="/about" className="inline-block border-b border-primary pb-1 text-sm tracking-widest uppercase hover:text-accent hover:border-accent transition-colors">
-            Discover Our Story
-          </Link>
-        </div>
-      </section>
 
       {/* SOCIAL PROOF / REVIEWS */}
       <section className="py-16 md:py-24 bg-secondary">
