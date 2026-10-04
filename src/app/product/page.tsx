@@ -467,7 +467,12 @@ function ProductContent() {
                   <h3 className="text-sm tracking-widest uppercase font-semibold mb-1 hover:text-accent transition-colors">
                     <Link href={`/product?id=${p.id}`}>{p.name}</Link>
                   </h3>
-                  <p className="text-sm font-medium mt-auto">₹{p.price.toLocaleString('en-IN')}</p>
+                  <div className="flex justify-center items-center gap-2 mt-auto">
+                    {p.salePrice && (
+                      <span className="text-xs text-primary/40 line-through">₹{p.price.toLocaleString('en-IN')}</span>
+                    )}
+                    <span className="text-sm font-medium text-primary">₹{(p.salePrice || p.price).toLocaleString('en-IN')}</span>
+                  </div>
                 </div>
               </div>
             ))}
