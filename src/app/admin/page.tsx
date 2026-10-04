@@ -19,7 +19,7 @@ export default function AdminDashboard() {
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
-      if (session) {
+      if (session && session.user.email === "arjungupta434320@gmail.com") {
         fetchOrders();
         fetchReviews();
       } else {
@@ -29,9 +29,11 @@ export default function AdminDashboard() {
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
-      if (session) {
+      if (session && session.user.email === "arjungupta434320@gmail.com") {
         fetchOrders();
         fetchReviews();
+      } else {
+        setLoading(false);
       }
     });
 
@@ -112,6 +114,18 @@ export default function AdminDashboard() {
             </button>
           </form>
         </div>
+      </div>
+    );
+  }
+
+  if (session.user.email !== "arjungupta434320@gmail.com") {
+    return (
+      <div className="min-h-screen pt-32 pb-24 bg-background flex flex-col items-center justify-center text-center px-6">
+        <h1 className="font-serif text-3xl text-primary mb-4">Access Denied</h1>
+        <p className="text-primary/70 mb-8">You do not have administrative privileges to view this page.</p>
+        <button onClick={handleLogout} className="px-8 py-3 bg-primary text-secondary tracking-widest uppercase text-xs hover:bg-accent transition-colors">
+          Sign Out
+        </button>
       </div>
     );
   }
