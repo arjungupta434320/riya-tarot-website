@@ -286,7 +286,7 @@ function ProductContent() {
 
             {/* Accordions */}
             <div className="mt-12 flex flex-col border-t border-primary/10">
-              {['About the stone', 'How to wear', 'Care guide', 'Our energizing ritual'].map((tab) => (
+              {['About the stone', 'How to wear', 'Care guide', 'Our energizing ritual', 'Frequently Asked Questions'].map((tab) => (
                 <div key={tab} className="border-b border-primary/10">
                   <button 
                     onClick={() => setActiveTab(activeTab === tab ? "" : tab)}
@@ -301,6 +301,22 @@ function ProductContent() {
                       {tab === 'How to wear' && "Wear on your receiving hand (usually left) to invite the energy in, or giving hand (usually right) to project the energy outwards."}
                       {tab === 'Care guide' && "Keep away from water, perfumes, and harsh chemicals. Wipe gently with a soft cloth. Store in the provided pouch when not wearing."}
                       {tab === 'Our energizing ritual' && "Every bracelet undergoes a spiritual preparation process before shipping, intended to cleanse its energy and prepare it for your personal intentions."}
+                      {tab === 'Frequently Asked Questions' && (
+                        <div className="space-y-4">
+                          <div>
+                            <strong className="block text-primary mb-1">How do I know this crystal is authentic?</strong>
+                            All our crystals are ethically sourced and 100% natural. We do not sell dyed or synthetic stones.
+                          </div>
+                          <div>
+                            <strong className="block text-primary mb-1">How long does shipping take?</strong>
+                            Orders are processed within 1-2 business days. Standard delivery usually takes 3-5 business days across India.
+                          </div>
+                          <div>
+                            <strong className="block text-primary mb-1">Can I return my bracelet?</strong>
+                            We accept returns only if you provide a continuous, unedited unboxing video showing the original seal being broken. See our Returns policy for full details.
+                          </div>
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
