@@ -75,6 +75,7 @@ export default function Navbar() {
           <nav className="hidden xl:flex gap-3 xl:gap-4 2xl:gap-6 text-[10px] xl:text-xs tracking-widest uppercase whitespace-nowrap">
             <Link href="/" className="hover:text-accent transition-colors">Home</Link>
             <Link href="/shop" className="hover:text-accent transition-colors">Shop All</Link>
+            <Link href="/quiz" className="hover:text-accent transition-colors">Crystal Quiz</Link>
             <Link href="/#collections" className="hover:text-accent transition-colors">Collections</Link>
             <Link href="/about" className="hover:text-accent transition-colors">About Us</Link>
             <Link href="/track" className="hover:text-accent transition-colors">Track Order</Link>
@@ -145,6 +146,7 @@ export default function Navbar() {
         <div className="xl:hidden absolute top-full left-0 w-full bg-background/95 backdrop-blur-md border-t border-warm-beige/30 py-6 px-6 flex flex-col gap-4 shadow-2xl z-[100] h-screen">
           <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="text-base tracking-widest uppercase py-3 border-b border-warm-beige/20 text-foreground">Home</Link>
           <Link href="/shop" onClick={() => setIsMobileMenuOpen(false)} className="text-base tracking-widest uppercase py-3 border-b border-warm-beige/20 text-foreground">Shop All</Link>
+          <Link href="/quiz" onClick={() => setIsMobileMenuOpen(false)} className="text-base tracking-widest uppercase py-3 border-b border-warm-beige/20 text-foreground">Crystal Quiz</Link>
           <Link href="/#collections" onClick={() => setIsMobileMenuOpen(false)} className="text-base tracking-widest uppercase py-3 border-b border-warm-beige/20 text-foreground">Collections</Link>
           <Link href="/about" onClick={() => setIsMobileMenuOpen(false)} className="text-base tracking-widest uppercase py-3 border-b border-warm-beige/20 text-foreground">About Us</Link>
           <Link href="/track" onClick={() => setIsMobileMenuOpen(false)} className="text-base tracking-widest uppercase py-3 border-b border-warm-beige/20 text-foreground">Track Order</Link>
