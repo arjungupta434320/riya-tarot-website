@@ -101,10 +101,10 @@ function ProductContent() {
   }
 
   return (
-    <div className="pt-24 bg-background">
+    <div className="pt-28 md:pt-32 pb-12 bg-background">
       
       {/* Product Top Section */}
-      <div className="container mx-auto px-6 py-12">
+      <div className="container mx-auto px-6">
         <div className="flex flex-col md:flex-row gap-12 lg:gap-24">
           
           {/* Images - Left */}
