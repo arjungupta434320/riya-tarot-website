@@ -71,8 +71,13 @@ export default function SignupPage() {
     <div className="min-h-screen pt-32 pb-24 bg-background flex flex-col items-center justify-center">
       <div className="max-w-md w-full px-6">
         <div className="text-center mb-10">
+          <div className="inline-block bg-[#b85c38]/10 border border-[#b85c38]/20 text-[#b85c38] text-[10px] sm:text-xs font-bold tracking-[0.2em] uppercase px-4 py-1.5 rounded-full mb-6">
+            ✨ Unlock Your 20% Off Code
+          </div>
           <h1 className="font-serif text-3xl md:text-4xl mb-4 text-primary">Join the Community</h1>
-          <p className="text-primary/70 text-sm">Create an account today and instantly receive a 20% off discount code for your first ritual piece.</p>
+          <p className="text-primary/70 text-sm leading-relaxed max-w-sm mx-auto">
+            Create an account today and instantly receive an exclusive <strong className="font-bold text-primary">20% OFF</strong> welcome discount for your first ritual piece.
+          </p>
         </div>
 
         {error && (
@@ -107,9 +112,9 @@ export default function SignupPage() {
           <button 
             type="submit" 
             disabled={loading}
-            className="w-full bg-primary text-secondary text-sm tracking-widest uppercase py-4 hover:bg-accent transition-colors disabled:opacity-50 mt-2"
+            className="w-full bg-primary text-secondary text-xs sm:text-sm tracking-widest uppercase py-4 hover:bg-accent transition-colors disabled:opacity-50 mt-2"
           >
-            {loading ? "Creating..." : "Create Account"}
+            {loading ? "Creating..." : "Create Account & Get 20% Off"}
           </button>
         </form>
 
