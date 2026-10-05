@@ -377,14 +377,14 @@ export default function CheckoutPage() {
                       value={discountInput}
                       onChange={(e) => setDiscountInput(e.target.value)}
                       placeholder="Enter code" 
-                      className="flex-grow bg-transparent border border-primary/20 px-3 py-2 text-sm focus:outline-none focus:border-primary uppercase"
+                      className="flex-grow min-w-0 bg-transparent border border-primary/20 px-3 py-2 text-sm focus:outline-none focus:border-primary uppercase"
                       disabled={!!discountCode}
                     />
                     <button 
                       type="button"
                       onClick={handleApplyDiscount}
                       disabled={!!discountCode}
-                      className="px-4 bg-primary text-secondary text-xs uppercase tracking-widest hover:bg-accent transition-colors disabled:opacity-50"
+                      className="px-4 flex-shrink-0 bg-primary text-secondary text-xs uppercase tracking-widest hover:bg-accent transition-colors disabled:opacity-50"
                     >
                       {discountCode ? "Applied" : "Apply"}
                     </button>
