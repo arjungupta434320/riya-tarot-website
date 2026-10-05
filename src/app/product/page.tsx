@@ -101,7 +101,7 @@ function ProductContent() {
   }
 
   return (
-    <div className="pt-28 md:pt-32 pb-12 bg-background">
+    <div className="pt-4 md:pt-8 pb-12 bg-background">
       
       {/* Product Top Section */}
       <div className="container mx-auto px-6">
