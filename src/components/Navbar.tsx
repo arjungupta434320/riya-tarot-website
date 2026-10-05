@@ -36,8 +36,22 @@ export default function Navbar() {
   return (
     <>
       {/* High CTA Announcement Bar */}
-      <div className="bg-primary text-secondary py-2 px-4 text-center text-xs sm:text-sm tracking-widest uppercase relative z-[60] flex items-center justify-center gap-2">
-        <span>FREE SHIPPING ON ALL ORDERS</span>
+      <div className="bg-primary text-secondary py-2 text-xs sm:text-sm tracking-[0.2em] uppercase relative z-[60] overflow-hidden flex whitespace-nowrap items-center">
+        <motion.div
+          animate={{ x: ["0%", "-50%"] }}
+          transition={{ repeat: Infinity, duration: 25, ease: "linear" }}
+          className="flex whitespace-nowrap min-w-max"
+        >
+          {/* We repeat the content twice to create a seamless infinite loop */}
+          {[...Array(2)].map((_, i) => (
+            <div key={i} className="flex items-center">
+              <span className="mx-8 font-semibold text-[#b85c38]">✨ SIGN UP & GET 20% OFF YOUR FIRST ORDER ✨</span>
+              <span className="mx-8">•</span>
+              <span className="mx-8">FREE SHIPPING ON ALL ORDERS</span>
+              <span className="mx-8">•</span>
+            </div>
+          ))}
+        </motion.div>
       </div>
 
       <header
