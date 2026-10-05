@@ -29,6 +29,8 @@ export default function CheckoutPage() {
   const [discountCode, setDiscountCode] = useState<string | null>(null);
   const [discountError, setDiscountError] = useState("");
 
+  const [paymentMethod, setPaymentMethod] = useState<'online' | 'cod'>('online');
+
   const subtotal = cart.reduce((total, item) => total + (item.salePrice || item.price) * item.quantity, 0);
   const discountAmount = discountCode === "WELCOME20" ? subtotal * 0.20 : 0;
   const finalTotal = subtotal - discountAmount;
@@ -60,6 +62,33 @@ export default function CheckoutPage() {
     
     setLoading(true);
     setError(null);
+
+    const fullAddress = `${formData.address}, ${formData.city}, ${formData.pincode}`;
+
+    if (paymentMethod === 'cod') {
+      try {
+        const { error: submitError } = await supabase
+          .from('orders')
+          .insert({
+            customer_name: formData.name,
+            customer_email: formData.email,
+            customer_phone: formData.phone,
+            shipping_address: fullAddress,
+            total_amount: finalTotal,
+            items: cart,
+            status: 'pending_cod'
+          });
+        
+        if (submitError) throw submitError;
+        setSuccess(true);
+        clearCart();
+      } catch (err) {
+        setError("Error recording order. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+      return;
+    }
 
     const isSdkLoaded = await loadRazorpay();
     if (!isSdkLoaded) {
@@ -99,7 +128,6 @@ export default function CheckoutPage() {
             
             if (verifyData.success) {
                // 4. Save confirmed order to Supabase
-               const fullAddress = `${formData.address}, ${formData.city}, ${formData.pincode}`;
                const { error: submitError } = await supabase
                  .from('orders')
                  .insert({
@@ -254,6 +282,27 @@ export default function CheckoutPage() {
                   </div>
                 </div>
 
+                <div>
+                  <h2 className="text-sm font-semibold tracking-widest uppercase mb-4">Payment Method</h2>
+                  <div className="space-y-4">
+                    <label className={`block border ${paymentMethod === 'online' ? 'border-primary bg-primary/5' : 'border-primary/20'} p-4 cursor-pointer transition-colors`}>
+                      <div className="flex items-center gap-3">
+                        <input type="radio" name="payment" checked={paymentMethod === 'online'} onChange={() => setPaymentMethod('online')} className="accent-primary" />
+                        <span className="font-medium text-primary">Pay Online (Razorpay)</span>
+                      </div>
+                      <p className="text-xs text-primary/60 mt-2 ml-7">Securely pay using UPI, Cards, or Netbanking.</p>
+                    </label>
+
+                    <label className={`block border ${paymentMethod === 'cod' ? 'border-primary bg-primary/5' : 'border-primary/20'} p-4 cursor-pointer transition-colors`}>
+                      <div className="flex items-center gap-3">
+                        <input type="radio" name="payment" checked={paymentMethod === 'cod'} onChange={() => setPaymentMethod('cod')} className="accent-primary" />
+                        <span className="font-medium text-primary">Cash on Delivery (COD)</span>
+                      </div>
+                      <p className="text-xs text-primary/60 mt-2 ml-7">Pay when your order is delivered to your doorstep.</p>
+                    </label>
+                  </div>
+                </div>
+
                 {error && (
                   <div className="p-4 bg-red-50 text-red-600 text-sm border border-red-200">
                     {error}
@@ -265,10 +314,10 @@ export default function CheckoutPage() {
                   disabled={loading}
                   className="w-full py-4 bg-primary text-secondary text-sm tracking-[0.2em] uppercase hover:bg-accent transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {loading ? "Processing..." : "Place Order Request"}
+                  {loading ? "Processing..." : (paymentMethod === 'cod' ? "Confirm COD Order" : "Proceed to Payment")}
                 </button>
                 <p className="text-xs text-primary/40 text-center mt-4">
-                  Payment options will be provided after confirming order details.
+                  {paymentMethod === 'cod' ? "You will pay upon delivery." : "You will be redirected to securely complete your payment."}
                 </p>
 
               </form>

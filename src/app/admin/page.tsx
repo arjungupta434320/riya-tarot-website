@@ -147,7 +147,7 @@ export default function AdminDashboard() {
             onClick={() => setActiveTab('orders')}
             className={`pb-4 tracking-widest uppercase text-sm font-semibold transition-colors ${activeTab === 'orders' ? 'border-b-2 border-primary text-primary' : 'text-primary/40 hover:text-primary'}`}
           >
-            Orders ({orders.filter(o => o.status === 'pending').length} Pending)
+            Orders ({orders.filter(o => ['paid', 'pending_cod'].includes(o.status)).length} Pending)
           </button>
           <button 
             onClick={() => setActiveTab('reviews')}
@@ -165,7 +165,9 @@ export default function AdminDashboard() {
             </div>
           ) : (
             <div className="space-y-6">
-              {orders.map((order) => (
+              {orders.map((order) => {
+                const isPending = ['paid', 'pending_cod'].includes(order.status);
+                return (
                 <div key={order.id} className="bg-white border border-primary/10 p-6 flex flex-col md:flex-row gap-6 shadow-sm">
                   
                   {/* Customer Details */}
@@ -173,10 +175,10 @@ export default function AdminDashboard() {
                     <div className="flex items-center gap-3 mb-4">
                       <h2 className="font-semibold text-lg">{order.customer_name}</h2>
                       <span className={`text-[10px] tracking-widest uppercase px-2 py-1 rounded-full flex items-center gap-1 ${
-                        order.status === 'pending' ? 'bg-orange-100 text-orange-700' : 'bg-green-100 text-green-700'
+                        isPending ? 'bg-orange-100 text-orange-700' : 'bg-green-100 text-green-700'
                       }`}>
-                        {order.status === 'pending' ? <Clock size={12}/> : <CheckCircle size={12}/>}
-                        {order.status}
+                        {isPending ? <Clock size={12}/> : <CheckCircle size={12}/>}
+                        {order.status === 'pending_cod' ? 'COD - Pending' : order.status}
                       </span>
                     </div>
                     <p className="text-sm text-primary/70"><strong>Email:</strong> {order.customer_email}</p>
@@ -197,14 +199,14 @@ export default function AdminDashboard() {
                       ))}
                     </div>
                     <div className="mt-4 pt-3 border-t border-primary/20 flex justify-between font-semibold">
-                      <span>Total Paid</span>
+                      <span>Total Amount</span>
                       <span>₹{order.total_amount.toLocaleString('en-IN')}</span>
                     </div>
                   </div>
 
                   {/* Actions */}
                   <div className="flex flex-col justify-center gap-3 min-w-[140px]">
-                    {order.status === 'pending' ? (
+                    {isPending ? (
                       <button 
                         onClick={() => updateOrderStatus(order.id, 'shipped')}
                         className="py-3 bg-primary text-secondary text-xs uppercase tracking-widest hover:bg-accent transition-colors w-full"
@@ -213,7 +215,7 @@ export default function AdminDashboard() {
                       </button>
                     ) : (
                       <button 
-                        onClick={() => updateOrderStatus(order.id, 'pending')}
+                        onClick={() => updateOrderStatus(order.id, order.status === 'shipped' ? 'paid' : 'pending_cod')}
                         className="py-3 bg-transparent border border-primary/20 text-primary text-xs uppercase tracking-widest hover:bg-secondary transition-colors w-full"
                       >
                         Undo
@@ -222,7 +224,7 @@ export default function AdminDashboard() {
                   </div>
 
                 </div>
-              ))}
+              )})}
             </div>
           )
         )}
