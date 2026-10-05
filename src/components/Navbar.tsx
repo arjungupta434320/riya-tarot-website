@@ -36,10 +36,10 @@ export default function Navbar() {
   return (
     <>
       {/* High CTA Announcement Bar */}
-      <div className="bg-primary text-secondary py-2 text-xs sm:text-sm tracking-[0.2em] uppercase relative z-[60] overflow-hidden flex whitespace-nowrap items-center">
+      <div className="bg-primary text-secondary py-2 text-xs sm:text-sm tracking-widest uppercase relative z-[60] overflow-hidden flex whitespace-nowrap items-center">
         <motion.div
           animate={{ x: ["0%", "-50%"] }}
-          transition={{ repeat: Infinity, duration: 25, ease: "linear" }}
+          transition={{ repeat: Infinity, duration: 15, ease: "linear" }}
           className="flex whitespace-nowrap min-w-max"
         >
           {/* We repeat the content twice to create a seamless infinite loop */}
