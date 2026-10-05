@@ -127,7 +127,7 @@ export default function Navbar() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search for crystals, intentions, bracelets..."
-                  className="w-full bg-secondary/50 border border-primary/20 py-4 pl-12 pr-4 focus:outline-none focus:border-primary transition-colors text-sm"
+                  className="w-full bg-secondary/50 border border-primary/20 py-4 pl-12 pr-24 focus:outline-none focus:border-primary transition-colors text-sm"
                   autoFocus
                 />
                 <button type="submit" className="absolute right-4 text-xs font-semibold tracking-widest uppercase hover:text-accent transition-colors">
