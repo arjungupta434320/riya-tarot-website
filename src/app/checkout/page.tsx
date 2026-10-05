@@ -85,22 +85,6 @@ export default function CheckoutPage() {
         if (submitError) throw submitError;
         setSuccess(true);
         clearCart();
-
-        // Try to send email receipt in background
-        if (newOrder?.id) {
-          fetch('/api/send-receipt', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              name: formData.name,
-              email: formData.email,
-              orderId: newOrder.id,
-              amount: finalTotal,
-              items: cart,
-              status: 'pending_cod'
-            })
-          }).catch(console.error);
-        }
       } catch (err) {
         setError("Error recording order. Please try again.");
       } finally {
@@ -163,21 +147,6 @@ export default function CheckoutPage() {
                
                setSuccess(true);
                clearCart();
-
-               // Try to send email receipt in background
-               fetch('/api/send-receipt', {
-                 method: 'POST',
-                 headers: { 'Content-Type': 'application/json' },
-                 body: JSON.stringify({
-                   name: formData.name,
-                   email: formData.email,
-                   orderId: verifyData.orderId || orderData.id,
-                   amount: finalTotal,
-                   items: cart,
-                   status: 'paid'
-                 })
-               }).catch(console.error);
-
             } else {
                setError("Payment verification failed. Please contact support.");
             }
