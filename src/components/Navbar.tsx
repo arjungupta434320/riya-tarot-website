@@ -96,20 +96,6 @@ export default function Navbar() {
           <Link href="/account" className="hidden md:block hover:text-accent transition-colors"><User size={20} /></Link>
           <button 
             onClick={() => {
-              setDrawerTab('wishlist');
-              toggleCart();
-            }}
-            className="hover:text-accent transition-colors relative"
-          >
-            <Heart size={20} />
-            {wishlist.length > 0 && (
-              <span className="absolute -top-2 -right-2 bg-accent text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full">
-                {wishlist.length}
-              </span>
-            )}
-          </button>
-          <button 
-            onClick={() => {
               setDrawerTab('cart');
               toggleCart();
             }}
