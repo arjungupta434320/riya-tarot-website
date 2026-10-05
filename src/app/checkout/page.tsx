@@ -33,7 +33,8 @@ export default function CheckoutPage() {
 
   const subtotal = cart.reduce((total, item) => total + (item.salePrice || item.price) * item.quantity, 0);
   const discountAmount = discountCode === "WELCOME20" ? subtotal * 0.20 : 0;
-  const finalTotal = subtotal - discountAmount;
+  const onlineDiscountAmount = paymentMethod === 'online' ? subtotal * 0.05 : 0;
+  const finalTotal = subtotal - discountAmount - onlineDiscountAmount;
 
   const handleApplyDiscount = () => {
     if (discountInput.trim().toUpperCase() === "WELCOME20") {
@@ -286,9 +287,12 @@ export default function CheckoutPage() {
                   <h2 className="text-sm font-semibold tracking-widest uppercase mb-4">Payment Method</h2>
                   <div className="space-y-4">
                     <label className={`block border ${paymentMethod === 'online' ? 'border-primary bg-primary/5' : 'border-primary/20'} p-4 cursor-pointer transition-colors`}>
-                      <div className="flex items-center gap-3">
-                        <input type="radio" name="payment" checked={paymentMethod === 'online'} onChange={() => setPaymentMethod('online')} className="accent-primary" />
-                        <span className="font-medium text-primary">Pay Online (Razorpay)</span>
+                      <div className="flex items-center justify-between gap-3">
+                        <div className="flex items-center gap-3">
+                          <input type="radio" name="payment" checked={paymentMethod === 'online'} onChange={() => setPaymentMethod('online')} className="accent-primary" />
+                          <span className="font-medium text-primary">Pay Online (Razorpay)</span>
+                        </div>
+                        <span className="text-[10px] uppercase tracking-widest bg-[#b85c38] text-white px-2 py-1 rounded-sm">Extra 5% Off</span>
                       </div>
                       <p className="text-xs text-primary/60 mt-2 ml-7">Securely pay using UPI, Cards, or Netbanking.</p>
                     </label>
@@ -360,6 +364,13 @@ export default function CheckoutPage() {
                     <div className="flex justify-between text-sm text-[#b85c38]">
                       <span>Discount (WELCOME20)</span>
                       <span>- ₹{discountAmount.toLocaleString('en-IN')}</span>
+                    </div>
+                  )}
+
+                  {onlineDiscountAmount > 0 && (
+                    <div className="flex justify-between text-sm text-[#b85c38]">
+                      <span>Online Payment Offer (5%)</span>
+                      <span>- ₹{onlineDiscountAmount.toLocaleString('en-IN')}</span>
                     </div>
                   )}
 
