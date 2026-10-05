@@ -59,10 +59,10 @@ export default function Navbar() {
           isScrolled ? "bg-background/95 backdrop-blur-md shadow-sm py-4" : "bg-background md:bg-transparent py-4 md:py-6"
         }`}
       >
-        <div className="container mx-auto h-[60px] md:h-[80px] flex justify-center items-center relative">
+        <div className="container mx-auto h-[60px] md:h-[80px] px-4 md:px-6 grid grid-cols-3 items-center">
         
         {/* Left: Mobile Hamburger & Desktop Links */}
-        <div className="absolute left-4 md:left-6 flex justify-start items-center z-50">
+        <div className="flex justify-start items-center z-50">
           <button 
             type="button"
             className="xl:hidden text-foreground p-2 -ml-2 cursor-pointer"
@@ -72,7 +72,7 @@ export default function Navbar() {
             {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
           </button>
           
-          <nav className="hidden xl:flex gap-6 2xl:gap-8 text-xs tracking-widest uppercase ml-4">
+          <nav className="hidden xl:flex gap-3 xl:gap-4 2xl:gap-6 text-[10px] xl:text-xs tracking-widest uppercase whitespace-nowrap">
             <Link href="/" className="hover:text-accent transition-colors">Home</Link>
             <Link href="/shop" className="hover:text-accent transition-colors">Shop All</Link>
             <Link href="/#collections" className="hover:text-accent transition-colors">Collections</Link>
@@ -82,16 +82,16 @@ export default function Navbar() {
         </div>
 
         {/* Center: Logo */}
-        <div className="flex justify-center items-center z-40 px-12">
+        <div className="flex justify-center items-center z-40">
           <Link href="/" className="flex flex-col items-center">
-            <span className="text-sm sm:text-base md:text-2xl font-normal tracking-[0.15em] md:tracking-[0.25em] text-center font-[family-name:var(--font-cinzel)] text-primary">
+            <span className="text-sm sm:text-base md:text-lg xl:text-xl 2xl:text-2xl font-normal tracking-[0.1em] md:tracking-[0.15em] 2xl:tracking-[0.25em] text-center font-[family-name:var(--font-cinzel)] text-primary whitespace-nowrap">
               RIYA TAROT CRYSTALS
             </span>
           </Link>
         </div>
 
         {/* Right Nav */}
-        <div className="absolute right-4 md:right-6 flex items-center justify-end gap-3 sm:gap-4 md:gap-6 z-50">
+        <div className="flex justify-end items-center gap-3 sm:gap-4 md:gap-6 z-50">
           <button onClick={() => setIsSearchOpen(!isSearchOpen)} className="hidden md:block hover:text-accent transition-colors"><Search size={20} /></button>
           <Link href="/account" className="hidden md:block hover:text-accent transition-colors"><User size={20} /></Link>
           <button 

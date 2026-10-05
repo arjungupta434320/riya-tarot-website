@@ -181,8 +181,8 @@ export default function CheckoutPage() {
       <div className="min-h-screen pt-32 pb-24 px-6 flex flex-col items-center justify-center bg-background">
         <CheckCircle className="text-green-600 mb-6" size={64} />
         <h1 className="font-serif text-3xl md:text-4xl mb-4 text-center">Order Received!</h1>
-        <p className="text-primary/70 text-center max-w-md mb-8">
-          Thank you, {formData.name}. We have received your order request. We will contact you shortly regarding payment and shipping.
+        <p className="text-primary/70 text-center max-w-md mb-8 leading-relaxed">
+          Thank you, {formData.name}. We have successfully received your order. You can track your shipment status at any time using your email address on the <Link href="/track" className="underline hover:text-primary">Track Order</Link> page.
         </p>
         <Link href="/" className="px-8 py-3 bg-primary text-secondary tracking-[0.2em] uppercase text-xs hover:bg-accent transition-colors">
           Return Home
