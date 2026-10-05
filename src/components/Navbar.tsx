@@ -77,6 +77,7 @@ export default function Navbar() {
             <Link href="/shop" className="hover:text-accent transition-colors">Shop All</Link>
             <Link href="/#collections" className="hover:text-accent transition-colors">Collections</Link>
             <Link href="/about" className="hover:text-accent transition-colors">About Us</Link>
+            <Link href="/track" className="hover:text-accent transition-colors">Track Order</Link>
           </nav>
         </div>
 
@@ -160,6 +161,7 @@ export default function Navbar() {
           <Link href="/shop" onClick={() => setIsMobileMenuOpen(false)} className="text-base tracking-widest uppercase py-3 border-b border-warm-beige/20 text-foreground">Shop All</Link>
           <Link href="/#collections" onClick={() => setIsMobileMenuOpen(false)} className="text-base tracking-widest uppercase py-3 border-b border-warm-beige/20 text-foreground">Collections</Link>
           <Link href="/about" onClick={() => setIsMobileMenuOpen(false)} className="text-base tracking-widest uppercase py-3 border-b border-warm-beige/20 text-foreground">About Us</Link>
+          <Link href="/track" onClick={() => setIsMobileMenuOpen(false)} className="text-base tracking-widest uppercase py-3 border-b border-warm-beige/20 text-foreground">Track Order</Link>
           
           <div className="flex gap-8 mt-6">
             <button onClick={() => { setIsSearchOpen(!isSearchOpen); setIsMobileMenuOpen(false); }} className="hover:text-accent transition-colors"><Search size={24} /></button>

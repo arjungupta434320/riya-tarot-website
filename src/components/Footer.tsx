@@ -28,6 +28,7 @@ export default function Footer() {
           <div>
             <h4 className="text-sm tracking-widest uppercase mb-6 text-accent">Help & Legal</h4>
             <ul className="flex flex-col gap-3 text-sm font-light text-secondary/80">
+              <li><Link href="/track" className="hover:text-white transition-colors">Track Order</Link></li>
               <li><Link href="/policies/contact" className="hover:text-white transition-colors">Contact Us</Link></li>
               <li><Link href="/policies/shipping" className="hover:text-white transition-colors">Shipping & Delivery</Link></li>
               <li><Link href="/policies/refunds" className="hover:text-white transition-colors">Cancellation & Refunds</Link></li>
