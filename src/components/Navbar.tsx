@@ -99,7 +99,7 @@ export default function Navbar() {
               setDrawerTab('wishlist');
               toggleCart();
             }}
-            className="hidden md:block hover:text-accent transition-colors relative"
+            className="hover:text-accent transition-colors relative"
           >
             <Heart size={20} />
             {wishlist.length > 0 && (
@@ -166,21 +166,6 @@ export default function Navbar() {
           <div className="flex gap-8 mt-6">
             <button onClick={() => { setIsSearchOpen(!isSearchOpen); setIsMobileMenuOpen(false); }} className="hover:text-accent transition-colors"><Search size={24} /></button>
             <Link href="/account" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-accent transition-colors"><User size={24} /></Link>
-            <button 
-              onClick={() => {
-                setIsMobileMenuOpen(false);
-                setDrawerTab('wishlist');
-                toggleCart();
-              }}
-              className="hover:text-accent transition-colors relative"
-            >
-              <Heart size={24} />
-              {wishlist.length > 0 && (
-                <span className="absolute -top-2 -right-2 bg-accent text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full">
-                  {wishlist.length}
-                </span>
-              )}
-            </button>
           </div>
         </div>
       )}
