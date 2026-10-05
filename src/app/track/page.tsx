@@ -24,7 +24,7 @@ export default function TrackOrderPage() {
       const { data, error } = await supabase
         .from("orders")
         .select("*")
-        .eq("customer_email", email.trim().toLowerCase())
+        .ilike("customer_email", email.trim())
         .order("created_at", { ascending: false });
 
       if (error) throw error;
