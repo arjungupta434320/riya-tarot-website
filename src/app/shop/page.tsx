@@ -18,6 +18,9 @@ function ShopContent() {
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get("search")?.toLowerCase() || "";
 
+  const [sortOption, setSortOption] = useState("featured");
+  const [showSort, setShowSort] = useState(false);
+
   useEffect(() => {
     fetchProducts().then(setProducts);
   }, []);
@@ -31,6 +34,12 @@ function ShopContent() {
       (p.category && p.category.toLowerCase().includes(searchQuery));
       
     return matchesCategory && matchesSearch;
+  }).sort((a, b) => {
+    const priceA = a.salePrice || a.price;
+    const priceB = b.salePrice || b.price;
+    if (sortOption === "price-low") return priceA - priceB;
+    if (sortOption === "price-high") return priceB - priceA;
+    return 0; // featured
   });
 
   return (
@@ -55,13 +64,36 @@ function ShopContent() {
           <div>
           </div>
           
-          <div className="flex gap-4 mt-6 md:mt-0">
-            <button className="flex items-center gap-2 text-sm tracking-widest uppercase border border-primary/20 px-4 py-2 hover:bg-secondary transition-colors">
-              <SlidersHorizontal size={14} /> Filter
+          <div className="flex gap-4 mt-6 md:mt-0 relative">
+            <button 
+              onClick={() => setShowSort(!showSort)}
+              className="flex items-center gap-2 text-sm tracking-widest uppercase border border-primary/20 px-4 py-2 hover:bg-secondary transition-colors"
+            >
+              Sort By {sortOption === 'price-low' ? ': Price (Low)' : sortOption === 'price-high' ? ': Price (High)' : ''} <ChevronDown size={14} className={`transition-transform ${showSort ? 'rotate-180' : ''}`} />
             </button>
-            <button className="flex items-center gap-2 text-sm tracking-widest uppercase border border-primary/20 px-4 py-2 hover:bg-secondary transition-colors">
-              Sort <ChevronDown size={14} />
-            </button>
+
+            {showSort && (
+              <div className="absolute top-full right-0 mt-2 w-48 bg-white border border-primary/10 shadow-xl z-50">
+                <button 
+                  onClick={() => { setSortOption('featured'); setShowSort(false); }}
+                  className="block w-full text-left px-4 py-3 text-xs tracking-widest uppercase hover:bg-secondary transition-colors"
+                >
+                  Featured
+                </button>
+                <button 
+                  onClick={() => { setSortOption('price-low'); setShowSort(false); }}
+                  className="block w-full text-left px-4 py-3 text-xs tracking-widest uppercase hover:bg-secondary transition-colors border-t border-primary/5"
+                >
+                  Price: Low to High
+                </button>
+                <button 
+                  onClick={() => { setSortOption('price-high'); setShowSort(false); }}
+                  className="block w-full text-left px-4 py-3 text-xs tracking-widest uppercase hover:bg-secondary transition-colors border-t border-primary/5"
+                >
+                  Price: High to Low
+                </button>
+              </div>
+            )}
           </div>
         </div>
 
