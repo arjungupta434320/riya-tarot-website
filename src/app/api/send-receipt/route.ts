@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 export async function POST(req: Request) {
   try {
     const { name, email, orderId, amount, items, status } = await req.json();
@@ -11,6 +9,8 @@ export async function POST(req: Request) {
       console.warn("No RESEND_API_KEY set. Skipping email receipt.");
       return NextResponse.json({ success: true, message: "Skipped (No API Key)" });
     }
+
+    const resend = new Resend(process.env.RESEND_API_KEY);
 
     const formattedAmount = Number(amount).toLocaleString('en-IN');
     const paymentMethodText = status === 'pending_cod' ? "Cash on Delivery" : "Online Payment (Razorpay)";
