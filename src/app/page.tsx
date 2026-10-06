@@ -17,9 +17,9 @@ const trustFeatures = [
 
 const intentions = [
   { name: "LOVE", image: "/images/products/rose-quartz-new.jpg", id: "love-attraction" },
-  { name: "CALM", image: "/images/products/turquoise-main.jpg", id: "turquoise" },
+  { name: "CALM", image: "/images/products/turquoise-new.jpg", id: "turquoise" },
   { name: "PROTECTION", image: "/images/products/red-carnelian-new.jpg", id: "red-carnelian" },
-  { name: "CONFIDENCE", image: "/images/products/tiger-eye-main.jpg", id: "tiger-eye-celeb" },
+  { name: "CONFIDENCE", image: "/images/products/tiger-eye-new.jpg", id: "tiger-eye-celeb" },
   { name: "FOCUS", image: "/images/products/citrine-new.jpg", id: "citrine" },
 ];
 
