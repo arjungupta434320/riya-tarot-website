@@ -8,7 +8,7 @@ import { fetchProducts } from "@/data/products";
 import { useStore, Product } from "@/store/useStore";
 import { SlidersHorizontal, ChevronDown } from "lucide-react";
 
-const categories = ["Crystals", "Love", "Abundance", "Calm", "Protection", "Confidence", "Focus"];
+const categories = ["Crystals"];
 
 function ShopContent() {
   const [activeCategory, setActiveCategory] = useState("Crystals");
