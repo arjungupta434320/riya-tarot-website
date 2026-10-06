@@ -74,7 +74,7 @@ export default function Navbar() {
           
           <nav className="hidden xl:flex gap-3 xl:gap-4 2xl:gap-6 text-[10px] xl:text-xs tracking-widest uppercase whitespace-nowrap">
             <Link href="/" className="hover:text-accent transition-colors">Home</Link>
-            <Link href="/shop" className="hover:text-accent transition-colors">Crystals</Link>
+            <Link href="/shop" className="hover:text-accent transition-colors">Bracelets</Link>
             <Link href="/quiz" className="hover:text-accent transition-colors">Crystal Quiz</Link>
             <Link href="/#collections" className="hover:text-accent transition-colors">Collections</Link>
             <Link href="/about" className="hover:text-accent transition-colors">About Us</Link>
@@ -93,8 +93,23 @@ export default function Navbar() {
 
         {/* Right Nav */}
         <div className="flex justify-end items-center gap-3 sm:gap-4 md:gap-6 z-50">
-          <button onClick={() => setIsSearchOpen(!isSearchOpen)} className="hidden md:block hover:text-accent transition-colors"><Search size={20} /></button>
-          <Link href="/account" className="hidden md:block hover:text-accent transition-colors"><User size={20} /></Link>
+          <Link href="/account" className="hover:text-accent transition-colors">
+            <User size={20} className="md:w-5 md:h-5 w-[22px] h-[22px]" />
+          </Link>
+          <button 
+            onClick={() => {
+              setDrawerTab('wishlist');
+              toggleCart();
+            }}
+            className="hover:text-accent transition-colors relative"
+          >
+            <Heart size={20} className="md:w-5 md:h-5 w-[22px] h-[22px]" />
+            {wishlist.length > 0 && (
+              <span className="absolute -top-2 -right-2 bg-accent text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full">
+                {wishlist.length}
+              </span>
+            )}
+          </button>
           <button 
             onClick={() => {
               setDrawerTab('cart');
@@ -112,49 +127,34 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Search Dropdown */}
-      <AnimatePresence>
-        {isSearchOpen && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            className="absolute top-full left-0 w-full bg-background border-b border-primary/10 overflow-hidden z-[45]"
-          >
-            <div className="container mx-auto px-6 py-6">
-              <form onSubmit={handleSearchSubmit} className="relative max-w-2xl mx-auto flex items-center">
-                <Search size={20} className="absolute left-4 text-primary/40" />
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search for crystals, intentions, bracelets..."
-                  className="w-full bg-secondary/50 border border-primary/20 py-4 pl-12 pr-24 focus:outline-none focus:border-primary transition-colors text-sm"
-                  autoFocus
-                />
-                <button type="submit" className="absolute right-4 text-xs font-semibold tracking-widest uppercase hover:text-accent transition-colors">
-                  Search
-                </button>
-              </form>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Persistent Search Bar Below Header */}
+      <div className="w-full bg-background border-t border-primary/10 overflow-hidden">
+        <div className="container mx-auto px-4 py-3 md:py-4">
+          <form onSubmit={handleSearchSubmit} className="relative max-w-2xl mx-auto flex items-center">
+            <Search size={18} className="absolute left-4 text-primary/40" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search for bracelets, intentions, crystals..."
+              className="w-full bg-secondary/50 border border-primary/20 py-3 pl-12 pr-24 focus:outline-none focus:border-primary transition-colors text-sm"
+            />
+            <button type="submit" className="absolute right-4 text-xs font-semibold tracking-widest uppercase hover:text-accent transition-colors">
+              Search
+            </button>
+          </form>
+        </div>
+      </div>
 
       {/* Mobile/Tablet Menu Dropdown */}
       {isMobileMenuOpen && (
         <div className="xl:hidden absolute top-full left-0 w-full bg-background/95 backdrop-blur-md border-t border-warm-beige/30 py-6 px-6 flex flex-col gap-4 shadow-2xl z-[100] h-screen">
           <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="text-base tracking-widest uppercase py-3 border-b border-warm-beige/20 text-foreground">Home</Link>
-          <Link href="/shop" onClick={() => setIsMobileMenuOpen(false)} className="text-base tracking-widest uppercase py-3 border-b border-warm-beige/20 text-foreground">Crystals</Link>
+          <Link href="/shop" onClick={() => setIsMobileMenuOpen(false)} className="text-base tracking-widest uppercase py-3 border-b border-warm-beige/20 text-foreground">Bracelets</Link>
           <Link href="/quiz" onClick={() => setIsMobileMenuOpen(false)} className="text-base tracking-widest uppercase py-3 border-b border-warm-beige/20 text-foreground">Crystal Quiz</Link>
           <Link href="/#collections" onClick={() => setIsMobileMenuOpen(false)} className="text-base tracking-widest uppercase py-3 border-b border-warm-beige/20 text-foreground">Collections</Link>
           <Link href="/about" onClick={() => setIsMobileMenuOpen(false)} className="text-base tracking-widest uppercase py-3 border-b border-warm-beige/20 text-foreground">About Us</Link>
           <Link href="/track" onClick={() => setIsMobileMenuOpen(false)} className="text-base tracking-widest uppercase py-3 border-b border-warm-beige/20 text-foreground">Track Order</Link>
-          
-          <div className="flex gap-8 mt-6">
-            <button onClick={() => { setIsSearchOpen(!isSearchOpen); setIsMobileMenuOpen(false); }} className="hover:text-accent transition-colors"><Search size={24} /></button>
-            <Link href="/account" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-accent transition-colors"><User size={24} /></Link>
-          </div>
         </div>
       )}
     </header>

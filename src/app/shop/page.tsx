@@ -8,10 +8,10 @@ import { fetchProducts } from "@/data/products";
 import { useStore, Product } from "@/store/useStore";
 import { SlidersHorizontal, ChevronDown } from "lucide-react";
 
-const categories = ["Crystals"];
+const categories = ["Bracelets"];
 
 function ShopContent() {
-  const [activeCategory, setActiveCategory] = useState("Crystals");
+  const [activeCategory, setActiveCategory] = useState("Bracelets");
   const [products, setProducts] = useState<Product[]>([]);
   const { addToCart } = useStore();
   
@@ -26,7 +26,7 @@ function ShopContent() {
   }, []);
 
   const filteredProducts = products.filter(p => {
-    const matchesCategory = activeCategory === "Crystals" || p.category === activeCategory;
+    const matchesCategory = activeCategory === "Bracelets" || p.category === activeCategory;
     const matchesSearch = !searchQuery || 
       (p.name && p.name.toLowerCase().includes(searchQuery)) || 
       (p.description && p.description.toLowerCase().includes(searchQuery)) || 
