@@ -286,18 +286,17 @@ function ProductContent() {
 
             {/* Accordions */}
             <div className="mt-12 flex flex-col border-t border-primary/10">
-              {['Description'].map((tab) => (
+              {['Description', 'Frequently Asked Questions'].map((tab) => (
                 <div key={tab} className="border-b border-primary/10">
                   <button 
                     onClick={() => setActiveTab(activeTab === tab ? "" : tab)}
                     className="w-full py-5 flex justify-between items-center text-sm tracking-widest uppercase hover:text-accent transition-colors"
                   >
                     {tab}
-                    <ChevronDown size={16} className={`transform transition-transform ${activeTab === tab ? "rotate-180" : ""}`} />
+                    {activeTab === tab ? <Minus size={16} /> : <Plus size={16} />}
                   </button>
-                  {activeTab === tab && (
+                  {activeTab === tab && tab === 'Description' && (
                     <div className="pb-8 text-sm font-light text-primary/80 leading-relaxed space-y-8">
-                      
                       {/* About the stone */}
                       <div>
                         <h3 className="text-primary tracking-widest uppercase text-xs font-semibold mb-3">About the Stone</h3>
@@ -327,26 +326,23 @@ function ProductContent() {
                         <h3 className="text-primary tracking-widest uppercase text-xs font-semibold mb-3">Our Energizing Ritual</h3>
                         <p>At Riya Tarot Crystals, we believe in the profound power of energetic purity. Before your <strong>{product.name}</strong> is packed, it undergoes a sacred cleansing and energizing ritual. We use high-vibration sound frequencies, selenite charging plates, and herbal smoke to clear any stagnant energies it may have absorbed during its journey from the earth. This meticulous process ensures that when your bracelet arrives, it is a pure, vibrant canvas, ready to align entirely with your unique personal intentions.</p>
                       </div>
-                      
-                      {/* Frequently Asked Questions */}
-                      <div>
-                        <h3 className="text-primary tracking-widest uppercase text-xs font-semibold mb-4">Frequently Asked Questions</h3>
-                        <div className="space-y-4">
-                          <div>
-                            <strong className="block text-primary mb-1">How do I know this crystal is authentic?</strong>
-                            All our crystals are ethically sourced, 100% natural, and meticulously verified. We do not sell dyed, heated, or synthetic glass stones.
-                          </div>
-                          <div>
-                            <strong className="block text-primary mb-1">How long does shipping take?</strong>
-                            Orders are processed and energized within 1-2 business days. Standard delivery usually takes 3-5 business days across India.
-                          </div>
-                          <div>
-                            <strong className="block text-primary mb-1">Can I return my bracelet?</strong>
-                            We accept returns only if you provide a continuous, unedited unboxing video showing the original seal being broken. See our Returns policy for full details.
-                          </div>
-                        </div>
-                      </div>
+                    </div>
+                  )}
 
+                  {activeTab === tab && tab === 'Frequently Asked Questions' && (
+                    <div className="pb-8 text-sm font-light text-primary/80 leading-relaxed space-y-4">
+                      <div>
+                        <strong className="block text-primary mb-1">How do I know this crystal is authentic?</strong>
+                        All our crystals are ethically sourced, 100% natural, and meticulously verified. We do not sell dyed, heated, or synthetic glass stones.
+                      </div>
+                      <div>
+                        <strong className="block text-primary mb-1">How long does shipping take?</strong>
+                        Orders are processed and energized within 1-2 business days. Standard delivery usually takes 3-5 business days across India.
+                      </div>
+                      <div>
+                        <strong className="block text-primary mb-1">Can I return my bracelet?</strong>
+                        We accept returns only if you provide a continuous, unedited unboxing video showing the original seal being broken. See our Returns policy for full details.
+                      </div>
                     </div>
                   )}
                 </div>
