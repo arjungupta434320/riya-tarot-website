@@ -161,6 +161,7 @@ export default function Home() {
                     <button 
                       onClick={(e) => {
                         e.preventDefault();
+                        import("@/lib/animations").then(m => m.flyToCart(e, product.image));
                         addToCart(product);
                       }}
                       className="flex-1 bg-primary text-secondary text-xs tracking-widest py-3 uppercase hover:bg-accent transition-colors"

@@ -12,6 +12,7 @@ export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [products, setProducts] = useState<any[]>([]);
   const router = useRouter();
   const { cart, wishlist, toggleCart, setDrawerTab } = useStore();
 
@@ -20,6 +21,10 @@ export default function Navbar() {
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll);
+    
+    // Fetch products for instant search
+    import("@/data/products").then(m => m.fetchProducts().then(setProducts));
+    
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -110,6 +115,7 @@ export default function Navbar() {
             )}
           </button>
           <button 
+            id="cart-icon"
             onClick={() => {
               setDrawerTab('cart');
               toggleCart();
@@ -127,9 +133,9 @@ export default function Navbar() {
       </div>
 
       {/* Persistent Search Bar Below Header */}
-      <div className="w-full bg-background border-t border-primary/10 overflow-hidden">
+      <div className="w-full bg-background border-t border-primary/10 overflow-visible relative z-40">
         <div className="container mx-auto px-4 py-3 md:py-4">
-          <form onSubmit={handleSearchSubmit} className="relative max-w-2xl mx-auto flex items-center">
+          <form onSubmit={handleSearchSubmit} className="relative max-w-2xl mx-auto flex items-center group">
             <Search size={18} className="absolute left-4 text-primary/40" />
             <input
               type="text"
@@ -141,6 +147,63 @@ export default function Navbar() {
             <button type="submit" className="absolute right-4 text-xs font-semibold tracking-widest uppercase hover:text-accent transition-colors">
               Search
             </button>
+            
+            {/* Instant Visual Search Overlay */}
+            <AnimatePresence>
+              {searchQuery.trim().length > 1 && (
+                <motion.div 
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 10 }}
+                  className="absolute top-full left-0 w-full mt-2 bg-background border border-primary/10 shadow-2xl z-[100] max-h-[70vh] overflow-y-auto"
+                >
+                  <div className="p-4 border-b border-primary/5">
+                    <span className="text-xs tracking-widest uppercase text-primary/50">Instant Results</span>
+                  </div>
+                  {(() => {
+                    const results = products.filter(p => 
+                      p.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                      (p.shortIntention && p.shortIntention.toLowerCase().includes(searchQuery.toLowerCase())) ||
+                      (p.description && p.description.toLowerCase().includes(searchQuery.toLowerCase()))
+                    ).slice(0, 4);
+
+                    if (results.length === 0) {
+                      return <div className="p-6 text-center text-sm text-primary/50">No products found for "{searchQuery}"</div>;
+                    }
+
+                    return (
+                      <div className="flex flex-col">
+                        {results.map(product => (
+                          <Link 
+                            href={`/product?id=${product.id}`} 
+                            key={product.id}
+                            onClick={() => setSearchQuery("")}
+                            className="flex items-center gap-4 p-4 hover:bg-secondary/50 transition-colors border-b border-primary/5 last:border-0"
+                          >
+                            <div className="w-16 h-16 bg-secondary relative flex-shrink-0">
+                              <img src={product.image} alt={product.name} className="absolute inset-0 w-full h-full object-cover" />
+                            </div>
+                            <div className="flex-grow">
+                              <h4 className="text-sm font-semibold tracking-widest uppercase">{product.name}</h4>
+                              <p className="text-xs text-primary/60 mt-1">{product.shortIntention}</p>
+                            </div>
+                            <div className="text-sm font-medium text-primary whitespace-nowrap">
+                              ₹{(product.salePrice || product.price).toLocaleString('en-IN')}
+                            </div>
+                          </Link>
+                        ))}
+                        <button 
+                          onClick={handleSearchSubmit}
+                          className="p-4 bg-secondary/20 text-xs tracking-widest uppercase text-center hover:bg-primary hover:text-secondary transition-colors"
+                        >
+                          View All Results
+                        </button>
+                      </div>
+                    );
+                  })()}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </form>
         </div>
       </div>

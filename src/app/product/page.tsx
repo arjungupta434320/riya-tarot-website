@@ -250,7 +250,10 @@ function ProductContent() {
                 </div>
                 
                 <button 
-                  onClick={() => addToCart(product, quantity)}
+                  onClick={(e) => {
+                    import("@/lib/animations").then(m => m.flyToCart(e, displayImage || product.image));
+                    addToCart(product, quantity);
+                  }}
                   className="flex-grow bg-primary text-secondary text-sm tracking-widest uppercase hover:bg-accent transition-colors magnetic-button"
                 >
                   Add To Bag
@@ -337,10 +340,11 @@ function ProductContent() {
                   </div>
                 </div>
                 <button 
-                  onClick={() => {
+                  onClick={(e) => {
+                    import("@/lib/animations").then(m => m.flyToCart(e, product.image));
                     addToCart(product, 1);
                     addToCart(relatedProducts[0], 1);
-                    useStore.setState({ isCartOpen: true });
+                    setTimeout(() => useStore.setState({ isCartOpen: true }), 800);
                   }}
                   className="w-full mt-5 bg-primary text-secondary text-xs tracking-widest uppercase py-3 hover:bg-accent transition-colors"
                 >
@@ -635,7 +639,10 @@ function ProductContent() {
               <span className="text-sm text-primary">₹{(product.salePrice || product.price).toLocaleString('en-IN')}</span>
             </div>
             <button 
-              onClick={() => addToCart(product, 1)}
+              onClick={(e) => {
+                import("@/lib/animations").then(m => m.flyToCart(e, product.image));
+                addToCart(product, 1);
+              }}
               className="bg-primary text-secondary px-6 py-3 text-xs tracking-widest uppercase"
             >
               Add To Bag
