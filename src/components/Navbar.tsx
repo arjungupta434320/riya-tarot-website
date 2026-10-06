@@ -148,10 +148,19 @@ export default function Navbar() {
               Search
             </button>
             
-            {/* Instant Visual Search Overlay */}
+            {/* Instant Visual Search Overlay & Backdrop */}
             <AnimatePresence>
-              {searchQuery.trim().length > 1 && (
+              {searchQuery.trim().length >= 2 && [
                 <motion.div 
+                  key="backdrop"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  onClick={() => setSearchQuery("")}
+                  className="fixed inset-0 bg-black/60 z-[90] backdrop-blur-sm"
+                />,
+                <motion.div 
+                  key="results"
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 10 }}
@@ -202,7 +211,7 @@ export default function Navbar() {
                     );
                   })()}
                 </motion.div>
-              )}
+              ]}
             </AnimatePresence>
           </form>
         </div>
