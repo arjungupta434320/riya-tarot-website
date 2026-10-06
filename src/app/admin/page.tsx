@@ -18,7 +18,14 @@ export default function AdminDashboard() {
 
   // Product Form State
   const [newProduct, setNewProduct] = useState({
-    id: "", name: "", description: "", shortIntention: "", price: "", salePrice: "", category: "Bracelets", image: ""
+    id: "tree-agate", 
+    name: "Tree Agate Bracelet", 
+    description: "Connect deeply with nature and ground your spirit with our beautiful Tree Agate bracelet. Known as the stone of inner peace and abundance, Tree Agate clears energy blockages and encourages a profound connection to the earth. Its beautiful green and white moss-like patterns remind us to stay rooted while continuing to grow, bringing stability and quiet strength to the wearer.", 
+    shortIntention: "For grounding, inner peace, and natural abundance", 
+    price: "1499", 
+    salePrice: "999", 
+    category: "Bracelets", 
+    image: "/images/products/tree-agate.jpg"
   });
   const [productSuccess, setProductSuccess] = useState("");
   const [productsList, setProductsList] = useState<any[]>([]);
