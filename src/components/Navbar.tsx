@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Search, Heart, ShoppingCart, User, Menu, X } from "lucide-react";
 import { useStore } from "@/store/useStore";
 import { motion, AnimatePresence } from "framer-motion";
+import { fetchProducts } from "@/data/products";
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -23,7 +24,7 @@ export default function Navbar() {
     window.addEventListener("scroll", handleScroll);
     
     // Fetch products for instant search
-    import("@/data/products").then(m => m.fetchProducts().then(setProducts));
+    fetchProducts().then(setProducts);
     
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -133,8 +134,8 @@ export default function Navbar() {
       </div>
 
       {/* Persistent Search Bar Below Header */}
-      <div className="w-full bg-background border-t border-primary/10 overflow-visible relative z-40">
-        <div className="container mx-auto px-4 py-3 md:py-4">
+      <div className="w-full bg-background border-t border-primary/10 overflow-visible relative z-[9999]">
+        <div className="container mx-auto px-4 py-3 md:py-4 relative">
           <form onSubmit={handleSearchSubmit} className="relative max-w-2xl mx-auto flex items-center group">
             <Search size={18} className="absolute left-4 text-primary/40" />
             <input
@@ -148,19 +149,10 @@ export default function Navbar() {
               Search
             </button>
             
-            {/* Instant Visual Search Overlay & Backdrop */}
+            {/* Instant Visual Search Overlay */}
             <AnimatePresence>
-              {searchQuery.trim().length >= 2 && [
+              {searchQuery.trim().length > 1 && (
                 <motion.div 
-                  key="backdrop"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  onClick={() => setSearchQuery("")}
-                  className="fixed inset-0 bg-black/60 z-[90] backdrop-blur-sm"
-                />,
-                <motion.div 
-                  key="results"
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 10 }}
@@ -211,7 +203,7 @@ export default function Navbar() {
                     );
                   })()}
                 </motion.div>
-              ]}
+              )}
             </AnimatePresence>
           </form>
         </div>
