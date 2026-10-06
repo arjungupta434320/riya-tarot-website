@@ -322,7 +322,7 @@ export default function AdminDashboard() {
 
               <div>
                 <label className="block text-xs uppercase tracking-widest text-primary/60 mb-2">Image URL (e.g. from Unsplash or Imgur)</label>
-                <input required type="url" value={newProduct.image} onChange={e => setNewProduct({...newProduct, image: e.target.value})} placeholder="https://..." className="w-full bg-secondary/30 border border-primary/20 px-4 py-3 focus:outline-none focus:border-primary" />
+                <input required type="text" value={newProduct.image} onChange={e => setNewProduct({...newProduct, image: e.target.value})} placeholder="https://..." className="w-full bg-secondary/30 border border-primary/20 px-4 py-3 focus:outline-none focus:border-primary" />
                 <p className="text-xs text-primary/40 mt-2">Note: To upload images, you can create a public "products" bucket in your Supabase dashboard, upload your image there, and paste the URL here.</p>
               </div>
 
