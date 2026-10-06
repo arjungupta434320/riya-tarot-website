@@ -297,19 +297,41 @@ function ProductContent() {
                   </button>
                   {activeTab === tab && (
                     <div className="pb-5 text-sm font-light text-primary/70 leading-relaxed">
-                      {tab === 'About the stone' && "Detailed original description of the stone's historical and traditional uses. Note: Properties discussed here are traditionally associated with spiritual practices and not scientifically proven to cure or treat any medical conditions."}
-                      {tab === 'How to wear' && "Wear on your receiving hand (usually left) to invite the energy in, or giving hand (usually right) to project the energy outwards."}
-                      {tab === 'Care guide' && "Keep away from water, perfumes, and harsh chemicals. Wipe gently with a soft cloth. Store in the provided pouch when not wearing."}
-                      {tab === 'Our energizing ritual' && "Every bracelet undergoes a spiritual preparation process before shipping, intended to cleanse its energy and prepare it for your personal intentions."}
-                      {tab === 'Frequently Asked Questions' && (
+                      {tab === 'About the stone' && (
                         <div className="space-y-4">
+                          <p>{product.description}</p>
+                          <p className="text-xs italic opacity-70 mt-4">Note: The properties discussed here are traditionally associated with spiritual practices and crystal healing. They are not scientifically proven to cure or treat any medical conditions.</p>
+                        </div>
+                      )}
+                      
+                      {tab === 'How to wear' && (
+                        <p>To maximize the benefits of your <strong>{product.name}</strong>, wear it on your <strong>left hand</strong> (the receiving side) to absorb its healing energy and invite its intentions into your life. Wear it on your <strong>right hand</strong> (the giving side) to project its energy outward and release blockages. You can wear it daily, but remember to consciously set your intention each morning when you put it on.</p>
+                      )}
+                      
+                      {tab === 'Care guide' && (
+                        <div className="space-y-2">
+                          <p>Crystals are natural minerals and require gentle care to maintain their beauty and energetic charge.</p>
+                          <ul className="list-disc pl-5 space-y-1 mt-2">
+                            <li>Keep your bracelet away from water, perfumes, lotions, and harsh chemicals to preserve both the elastic cord and the stone's natural polish.</li>
+                            <li>Cleanse its energy periodically by resting it on a Selenite charging plate, leaving it under the light of the full moon, or smudging it with sage.</li>
+                            <li>When not wearing, store it safely in the provided Riya Tarot pouch to prevent scratches and physical damage.</li>
+                          </ul>
+                        </div>
+                      )}
+                      
+                      {tab === 'Our energizing ritual' && (
+                        <p>At Riya Tarot Crystals, we believe in the profound power of energetic purity. Before your <strong>{product.name}</strong> is packed, it undergoes a sacred cleansing and energizing ritual. We use high-vibration sound frequencies, selenite charging plates, and herbal smoke to clear any stagnant energies it may have absorbed during its journey from the earth. This meticulous process ensures that when your bracelet arrives, it is a pure, vibrant canvas, ready to align entirely with your unique personal intentions.</p>
+                      )}
+                      
+                      {tab === 'Frequently Asked Questions' && (
+                        <div className="space-y-4 mt-2">
                           <div>
                             <strong className="block text-primary mb-1">How do I know this crystal is authentic?</strong>
-                            All our crystals are ethically sourced and 100% natural. We do not sell dyed or synthetic stones.
+                            All our crystals are ethically sourced, 100% natural, and meticulously verified. We do not sell dyed, heated, or synthetic glass stones.
                           </div>
                           <div>
                             <strong className="block text-primary mb-1">How long does shipping take?</strong>
-                            Orders are processed within 1-2 business days. Standard delivery usually takes 3-5 business days across India.
+                            Orders are processed and energized within 1-2 business days. Standard delivery usually takes 3-5 business days across India.
                           </div>
                           <div>
                             <strong className="block text-primary mb-1">Can I return my bracelet?</strong>
