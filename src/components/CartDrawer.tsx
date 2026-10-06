@@ -72,6 +72,22 @@ export default function CartDrawer() {
               </div>
             ) : (
               <div className="flex flex-col gap-6">
+                
+                {/* Free Shipping Progress */}
+                <div className="bg-secondary/50 p-4 border border-primary/10">
+                  <p className="text-xs tracking-widest text-center mb-2">
+                    {subtotal >= 5000 
+                      ? "✨ You've unlocked FREE Premium Shipping! ✨" 
+                      : `You are ₹${(5000 - subtotal).toLocaleString('en-IN')} away from FREE Premium Shipping`}
+                  </p>
+                  <div className="w-full h-1 bg-primary/10 rounded-full overflow-hidden">
+                    <div 
+                      className="h-full bg-accent transition-all duration-700 ease-out"
+                      style={{ width: `${Math.min(100, (subtotal / 5000) * 100)}%` }}
+                    />
+                  </div>
+                </div>
+
                 {cart.map((item) => (
                   <div key={item.id} className="flex gap-4 group">
                     <div className="w-24 h-24 bg-secondary relative flex-shrink-0 overflow-hidden">

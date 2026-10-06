@@ -7,6 +7,7 @@ import { useSearchParams } from "next/navigation";
 import { fetchProducts } from "@/data/products";
 import { useStore, Product } from "@/store/useStore";
 import { SlidersHorizontal, ChevronDown } from "lucide-react";
+import { motion } from "framer-motion";
 
 const categories = ["Bracelets"];
 
@@ -116,8 +117,15 @@ function ShopContent() {
 
         {/* Product Grid */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-10 md:gap-x-8 md:gap-y-16">
-          {filteredProducts.map((product) => (
-            <div key={product.id} className="group flex flex-col h-full">
+          {filteredProducts.map((product, idx) => (
+            <motion.div 
+              key={product.id} 
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.5, delay: idx % 4 * 0.1 }}
+              className="group flex flex-col h-full"
+            >
               <Link href={`/product?id=${product.id}`} className="relative aspect-square mb-4 bg-secondary overflow-hidden block">
                 <Image 
                   src={product.image} 
@@ -157,7 +165,7 @@ function ShopContent() {
                   )}
                 </div>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
 

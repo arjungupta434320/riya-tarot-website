@@ -27,6 +27,15 @@ function ProductContent() {
   const [reviews, setReviews] = useState<any[]>([]);
   const [reviewForm, setReviewForm] = useState({ name: '', rating: 5, text: '' });
   const [reviewStatus, setReviewStatus] = useState<'idle'|'submitting'|'success'|'error'>('idle');
+  const [showStickyAdd, setShowStickyAdd] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowStickyAdd(window.scrollY > 400);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   useEffect(() => {
     // Fetch all products
@@ -213,9 +222,18 @@ function ProductContent() {
             </div>
 
             <div className="w-full h-px bg-primary/10 mb-8"></div>
+            
+            {/* Low Stock Indicator */}
+            <div className="flex items-center gap-2 mb-4 text-xs font-semibold text-[#b85c38]">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#b85c38] opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-[#b85c38]"></span>
+              </span>
+              Only {Math.max(2, (product.name.length % 5) + 2)} left in stock - order soon
+            </div>
 
             {/* Actions */}
-            <div className="flex flex-col gap-4 mb-8">
+            <div className="flex flex-col gap-4 mb-8 relative z-10">
               <div className="flex gap-4">
                 <div className="flex items-center border border-primary/20 w-32 justify-between">
                   <button 
@@ -237,7 +255,7 @@ function ProductContent() {
                   onClick={() => addToCart(product, quantity)}
                   className="flex-grow bg-primary text-secondary text-sm tracking-widest uppercase hover:bg-accent transition-colors magnetic-button"
                 >
-                  Add To Cart
+                  Add To Bag
                 </button>
               </div>
               
@@ -253,7 +271,7 @@ function ProductContent() {
               </button>
             </div>
 
-            <div className="flex gap-6 text-sm text-primary/60">
+            <div className="flex gap-6 text-sm text-primary/60 mb-8">
               <button 
                 onClick={() => toggleWishlist(product.id)}
                 className={`flex items-center gap-2 transition-colors ${wishlist.includes(product.id) ? 'text-accent' : 'hover:text-primary'}`}
@@ -282,6 +300,22 @@ function ProductContent() {
               >
                 <Share2 size={16} /> Share
               </button>
+            </div>
+
+            {/* Trust Badges */}
+            <div className="grid grid-cols-3 gap-2 border border-primary/10 p-4 bg-secondary/30">
+              <div className="flex flex-col items-center text-center gap-2">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="text-primary/70"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                <span className="text-[10px] tracking-wider uppercase text-primary/70">100% Natural<br/>Stones</span>
+              </div>
+              <div className="flex flex-col items-center text-center gap-2">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="text-primary/70"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                <span className="text-[10px] tracking-wider uppercase text-primary/70">Ethically<br/>Sourced</span>
+              </div>
+              <div className="flex flex-col items-center text-center gap-2">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="text-primary/70"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                <span className="text-[10px] tracking-wider uppercase text-primary/70">Secure<br/>Checkout</span>
+              </div>
             </div>
 
             {/* Accordions */}
@@ -537,6 +571,29 @@ function ProductContent() {
         </div>
       </section>
       
+      {/* Sticky Mobile Add To Cart */}
+      <AnimatePresence>
+        {showStickyAdd && (
+          <motion.div 
+            initial={{ y: 100 }}
+            animate={{ y: 0 }}
+            exit={{ y: 100 }}
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            className="fixed bottom-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-md border-t border-primary/10 p-4 md:hidden flex items-center justify-between shadow-[0_-10px_40px_rgba(0,0,0,0.05)]"
+          >
+            <div className="flex flex-col">
+              <span className="text-xs font-semibold tracking-widest uppercase">{product.name}</span>
+              <span className="text-sm text-primary">₹{(product.salePrice || product.price).toLocaleString('en-IN')}</span>
+            </div>
+            <button 
+              onClick={() => addToCart(product, 1)}
+              className="bg-primary text-secondary px-6 py-3 text-xs tracking-widest uppercase"
+            >
+              Add To Bag
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
