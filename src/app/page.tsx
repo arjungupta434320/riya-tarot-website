@@ -20,7 +20,7 @@ const intentions = [
   { name: "CALM", image: "/images/products/turquoise-main.jpg", id: "turquoise" },
   { name: "PROTECTION", image: "/images/products/red-carnelian-new.jpg", id: "red-carnelian" },
   { name: "CONFIDENCE", image: "/images/products/tiger-eye-main.jpg", id: "tiger-eye-celeb" },
-  { name: "FOCUS", image: "/images/products/citrine-main.jpg", id: "citrine" },
+  { name: "FOCUS", image: "/images/products/citrine-new.jpg", id: "citrine" },
 ];
 
 export default function Home() {

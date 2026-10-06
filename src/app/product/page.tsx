@@ -85,7 +85,7 @@ function ProductContent() {
 
 
   const displayImage = selectedImage || product.image;
-  const galleryImages = product.gallery || [product.image];
+  const galleryImages = (product.gallery && product.gallery.length > 0) ? product.gallery : [product.image];
   const currentIndex = galleryImages.indexOf(displayImage);
 
   const paginate = (newDirection: number) => {

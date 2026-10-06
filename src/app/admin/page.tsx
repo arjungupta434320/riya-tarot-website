@@ -290,6 +290,7 @@ export default function AdminDashboard() {
         )}
 
         {activeTab === 'products' && (
+          <>
           <div className="bg-white border border-primary/10 p-8 shadow-sm max-w-3xl">
             <h2 className="font-serif text-2xl mb-6 text-primary">Add New Product</h2>
             {productSuccess && <p className="text-green-600 mb-6 bg-green-50 p-4 border border-green-200">{productSuccess}</p>}
@@ -374,7 +375,7 @@ export default function AdminDashboard() {
               ))}
             </div>
           </div>
-        </div>
+          </>
         )}
 
         {activeTab === 'reviews' && (
