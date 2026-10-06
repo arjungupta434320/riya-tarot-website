@@ -18,16 +18,10 @@ export default function AdminDashboard() {
 
   // Product Form State
   const [newProduct, setNewProduct] = useState({
-    id: "tree-agate", 
-    name: "Tree Agate Bracelet", 
-    description: "Connect deeply with nature and ground your spirit with our beautiful Tree Agate bracelet. Known as the stone of inner peace and abundance, Tree Agate clears energy blockages and encourages a profound connection to the earth. Its beautiful green and white moss-like patterns remind us to stay rooted while continuing to grow, bringing stability and quiet strength to the wearer.", 
-    shortIntention: "For grounding, inner peace, and natural abundance", 
-    price: "1499", 
-    salePrice: "999", 
-    category: "Bracelets", 
-    image: "/images/products/tree-agate.jpg"
+    id: "", name: "", description: "", shortIntention: "", price: "", salePrice: "", category: "Bracelets", image: ""
   });
   const [productSuccess, setProductSuccess] = useState("");
+  const [productsList, setProductsList] = useState<any[]>([]);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -35,6 +29,7 @@ export default function AdminDashboard() {
       if (session && session.user.email === "arjungupta434320@gmail.com") {
         fetchOrders();
         fetchReviews();
+        fetchProductsList();
       } else {
         setLoading(false);
       }
@@ -45,6 +40,7 @@ export default function AdminDashboard() {
       if (session && session.user.email === "arjungupta434320@gmail.com") {
         fetchOrders();
         fetchReviews();
+        fetchProductsList();
       } else {
         setLoading(false);
       }
@@ -52,6 +48,11 @@ export default function AdminDashboard() {
 
     return () => subscription.unsubscribe();
   }, []);
+
+  const fetchProductsList = async () => {
+    const { data } = await supabase.from("products").select("*").order("created_at", { ascending: false });
+    if (data) setProductsList(data);
+  };
 
   const fetchOrders = async () => {
     const { data } = await supabase.from("orders").select("*").order("created_at", { ascending: false });
@@ -94,6 +95,17 @@ export default function AdminDashboard() {
   const deleteReview = async (reviewId: string) => {
     const { error } = await supabase.from("reviews").delete().eq("id", reviewId);
     if (!error) setReviews(reviews.filter(r => r.id !== reviewId));
+  };
+
+  const handleDeleteProduct = async (productId: string) => {
+    if (confirm("Are you sure you want to completely delete this product?")) {
+      const { error } = await supabase.from('products').delete().eq('id', productId);
+      if (!error) {
+        setProductsList(productsList.filter(p => p.id !== productId));
+      } else {
+        alert("Error deleting product: " + error.message);
+      }
+    }
   };
 
   const handleAddProduct = async (e: React.FormEvent) => {
@@ -331,6 +343,31 @@ export default function AdminDashboard() {
               </button>
             </form>
           </div>
+          
+          <div className="mt-12 max-w-6xl">
+            <h2 className="font-serif text-2xl mb-6 text-primary">Manage Existing Products</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {productsList.map(product => (
+                <div key={product.id} className="bg-white border border-primary/10 p-4 shadow-sm flex flex-col">
+                  <div className="flex gap-4 mb-4 items-start">
+                    <img src={product.image} alt={product.name} className="w-16 h-16 object-cover bg-secondary" />
+                    <div>
+                      <h3 className="font-semibold text-sm mb-1 line-clamp-1">{product.name}</h3>
+                      <p className="text-xs text-primary/60 mb-1">₹{product.price}</p>
+                      <span className="text-[10px] tracking-widest uppercase bg-secondary px-2 py-1">{product.category}</span>
+                    </div>
+                  </div>
+                  <button 
+                    onClick={() => handleDeleteProduct(product.id)}
+                    className="w-full py-2 bg-red-50 text-red-600 text-xs uppercase tracking-widest hover:bg-red-100 transition-colors border border-red-200 mt-auto"
+                  >
+                    Delete
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
         )}
 
         {activeTab === 'reviews' && (
