@@ -45,9 +45,17 @@ export default function Home() {
       {/* HERO SECTION */}
       <section ref={heroRef} className="relative h-[90vh] md:h-screen w-full bg-primary flex items-center overflow-hidden">
         <motion.div style={{ y }} className="absolute inset-0 w-full h-full">
-          {/* I will use the generated hero image here */}
-          <div className="absolute inset-0 bg-[url('/images/hero_background.jpg')] bg-cover bg-center opacity-60 mix-blend-luminosity"></div>
-          <div className="absolute inset-0 bg-primary/40 mix-blend-multiply"></div>
+          {/* Cinematic Video Background */}
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="absolute inset-0 w-full h-full object-cover opacity-70 mix-blend-luminosity scale-105"
+          >
+            <source src="https://assets.mixkit.co/videos/preview/mixkit-sparkling-golden-dust-floating-in-the-air-285-large.mp4" type="video/mp4" />
+          </video>
+          <div className="absolute inset-0 bg-primary/30 mix-blend-multiply"></div>
         </motion.div>
         
         <div className="container mx-auto px-6 relative z-10 flex flex-col items-center justify-center text-center h-full pt-20">

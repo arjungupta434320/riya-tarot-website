@@ -70,13 +70,39 @@ export default function AccountPage() {
           </div>
           
           <div className="md:col-span-2 space-y-8">
-            <div className="bg-secondary/30 p-8 border border-primary/10">
-              <h2 className="font-serif text-xl mb-2 text-primary">Your Rewards</h2>
-              <p className="text-primary/70 text-sm mb-4 leading-relaxed">
-                Thank you for being part of our community. Use the code below at checkout to receive 20% off your next ritual piece.
-              </p>
-              <div className="bg-background inline-block px-6 py-3 border border-primary/20">
-                <span className="font-mono text-lg font-bold tracking-widest text-accent">WELCOME20</span>
+            <div className="bg-gradient-to-br from-primary to-primary/90 text-secondary p-8 md:p-10 border border-primary/20 shadow-2xl relative overflow-hidden">
+              <div className="absolute top-0 right-0 opacity-10 pointer-events-none">
+                <svg width="200" height="200" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 12l10 10 10-10L12 2zm0 14.5L6.5 12 12 6.5 17.5 12 12 16.5z"/></svg>
+              </div>
+              <h2 className="font-[family-name:var(--font-cinzel)] text-2xl md:text-3xl mb-1 text-accent tracking-widest uppercase">The Crystal Club</h2>
+              <p className="text-secondary/70 text-xs tracking-widest uppercase mb-8">Your VIP Dashboard</p>
+              
+              {fetchingOrders ? (
+                <div className="animate-pulse h-16 bg-secondary/10 w-full mb-6"></div>
+              ) : (
+                <div className="mb-8">
+                  <div className="flex justify-between items-end mb-2">
+                    <span className="text-3xl font-serif text-white">{Math.floor(orders.reduce((sum, o) => sum + Number(o.total_amount), 0) / 100)} <span className="text-sm tracking-widest uppercase text-secondary/60">Aura Points</span></span>
+                    <span className="text-xs uppercase tracking-widest text-accent font-semibold">{orders.length > 3 ? 'Archangel Tier' : 'Seeker Tier'}</span>
+                  </div>
+                  <div className="w-full h-1 bg-secondary/20 rounded-full overflow-hidden mb-3">
+                    <div 
+                      className="h-full bg-accent transition-all duration-1000 ease-out"
+                      style={{ width: `${Math.min(100, (orders.reduce((sum, o) => sum + Number(o.total_amount), 0) / 100) / 10)}%` }}
+                    />
+                  </div>
+                  <p className="text-xs text-secondary/60 font-light">Earn 1 Aura Point for every ₹100 spent. Unlock exclusive rituals at 1,000 points.</p>
+                </div>
+              )}
+              
+              <div className="bg-background/10 backdrop-blur-md p-6 border border-secondary/20 flex flex-col md:flex-row items-center justify-between gap-4">
+                <div>
+                  <p className="text-sm text-secondary font-medium mb-1">Your Active Reward</p>
+                  <p className="text-xs text-secondary/70 font-light">20% off your next ritual piece.</p>
+                </div>
+                <div className="px-6 py-2 border border-accent/50 bg-accent/10">
+                  <span className="font-mono text-sm font-bold tracking-widest text-accent">VIP20</span>
+                </div>
               </div>
             </div>
             

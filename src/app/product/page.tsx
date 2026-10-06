@@ -208,9 +208,7 @@ function ProductContent() {
               )}
             </div>
             
-            <p className="text-sm font-light leading-relaxed text-primary/80 mb-8">
-              {product.description}
-            </p>
+            {/* Removed description */}
 
             {/* Tags */}
             <div className="flex flex-wrap gap-2 mb-8">
@@ -317,6 +315,39 @@ function ProductContent() {
                 <span className="text-[10px] tracking-wider uppercase text-primary/70">Secure<br/>Checkout</span>
               </div>
             </div>
+
+            {/* Frequently Bought Together */}
+            {relatedProducts.length > 0 && (
+              <div className="mt-8 border border-primary/20 p-5 bg-secondary/10">
+                <h3 className="text-sm font-serif tracking-widest uppercase mb-4 text-primary">Frequently Bought Together</h3>
+                <div className="flex gap-4 items-center">
+                  <div className="relative w-16 h-16 bg-secondary flex-shrink-0">
+                    <Image src={product.image} fill className="object-cover" alt={product.name} />
+                  </div>
+                  <Plus size={16} className="text-primary/40 flex-shrink-0" />
+                  <div className="relative w-16 h-16 bg-secondary flex-shrink-0">
+                    <Image src={relatedProducts[0].image} fill className="object-cover" alt={relatedProducts[0].name} />
+                  </div>
+                  <div className="flex-grow flex flex-col items-end">
+                    <span className="text-xs text-primary/60 mb-1">Bundle Price:</span>
+                    <span className="text-lg font-medium text-primary">
+                      ₹{Math.round(((product.salePrice || product.price) + (relatedProducts[0].salePrice || relatedProducts[0].price)) * 0.9).toLocaleString('en-IN')}
+                    </span>
+                    <span className="text-[10px] text-accent font-semibold uppercase mt-0.5 border border-accent/20 px-2 py-0.5 bg-accent/5">Save 10%</span>
+                  </div>
+                </div>
+                <button 
+                  onClick={() => {
+                    addToCart(product, 1);
+                    addToCart(relatedProducts[0], 1);
+                    useStore.setState({ isCartOpen: true });
+                  }}
+                  className="w-full mt-5 bg-primary text-secondary text-xs tracking-widest uppercase py-3 hover:bg-accent transition-colors"
+                >
+                  Add Both To Bag
+                </button>
+              </div>
+            )}
 
             {/* Accordions */}
             <div className="mt-12 flex flex-col border-t border-primary/10">
@@ -477,6 +508,18 @@ function ProductContent() {
                     className="w-full bg-transparent border border-primary/20 px-4 py-3 focus:outline-none focus:border-primary transition-colors resize-none text-sm"
                   />
                   
+                  <div className="flex gap-4 items-center mb-4">
+                    <button 
+                      type="button" 
+                      onClick={() => alert("Photo upload activated! (Preview mode)")}
+                      className="flex items-center gap-2 text-xs uppercase tracking-widest text-primary/60 border border-primary/20 px-4 py-2 hover:bg-secondary transition-colors"
+                    >
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                      Add Photos
+                    </button>
+                    <span className="text-xs text-primary/40 italic">Customers love seeing real photos!</span>
+                  </div>
+
                   {reviewStatus === 'error' && <p className="text-red-500 text-sm">Failed to submit review. Please try again.</p>}
                   
                   <button 
@@ -505,7 +548,13 @@ function ProductContent() {
                           <User size={18} />
                         </div>
                         <div>
-                          <p className="font-semibold text-sm">{review.author_name}</p>
+                          <p className="font-semibold text-sm flex items-center gap-2">
+                            {review.author_name}
+                            <span className="text-[10px] text-green-700 bg-green-50 px-1.5 py-0.5 border border-green-200 flex items-center gap-1 tracking-widest uppercase">
+                              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 12 11 14 15 10"></polyline></svg>
+                              Verified Buyer
+                            </span>
+                          </p>
                           <p className="text-xs text-primary/40">{new Date(review.created_at).toLocaleDateString()}</p>
                         </div>
                       </div>
