@@ -8,10 +8,10 @@ import { fetchProducts } from "@/data/products";
 import { useStore, Product } from "@/store/useStore";
 import { SlidersHorizontal, ChevronDown } from "lucide-react";
 
-const categories = ["All", "Love", "Abundance", "Calm", "Protection", "Confidence", "Focus"];
+const categories = ["Crystals", "Love", "Abundance", "Calm", "Protection", "Confidence", "Focus"];
 
 function ShopContent() {
-  const [activeCategory, setActiveCategory] = useState("All");
+  const [activeCategory, setActiveCategory] = useState("Crystals");
   const [products, setProducts] = useState<Product[]>([]);
   const { addToCart } = useStore();
   
@@ -26,7 +26,7 @@ function ShopContent() {
   }, []);
 
   const filteredProducts = products.filter(p => {
-    const matchesCategory = activeCategory === "All" || p.category === activeCategory;
+    const matchesCategory = activeCategory === "Crystals" || p.category === activeCategory;
     const matchesSearch = !searchQuery || 
       (p.name && p.name.toLowerCase().includes(searchQuery)) || 
       (p.description && p.description.toLowerCase().includes(searchQuery)) || 
