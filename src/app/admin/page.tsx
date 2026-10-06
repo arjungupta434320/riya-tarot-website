@@ -8,13 +8,19 @@ export default function AdminDashboard() {
   const [session, setSession] = useState<any>(null);
   const [orders, setOrders] = useState<any[]>([]);
   const [reviews, setReviews] = useState<any[]>([]);
-  const [activeTab, setActiveTab] = useState<'orders' | 'reviews'>('orders');
+  const [activeTab, setActiveTab] = useState<'orders' | 'reviews' | 'products'>('orders');
   const [loading, setLoading] = useState(true);
   
   // Login State
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState("");
+
+  // Product Form State
+  const [newProduct, setNewProduct] = useState({
+    id: "", name: "", description: "", shortIntention: "", price: "", salePrice: "", category: "Bracelets", image: ""
+  });
+  const [productSuccess, setProductSuccess] = useState("");
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -83,6 +89,28 @@ export default function AdminDashboard() {
     if (!error) setReviews(reviews.filter(r => r.id !== reviewId));
   };
 
+  const handleAddProduct = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setProductSuccess("");
+    const { error } = await supabase.from('products').insert({
+      id: newProduct.id,
+      name: newProduct.name,
+      description: newProduct.description,
+      shortIntention: newProduct.shortIntention,
+      price: Number(newProduct.price),
+      salePrice: newProduct.salePrice ? Number(newProduct.salePrice) : null,
+      category: newProduct.category,
+      image: newProduct.image
+    });
+
+    if (error) {
+      alert("Error adding product: " + error.message);
+    } else {
+      setProductSuccess("Product added successfully!");
+      setNewProduct({ id: "", name: "", description: "", shortIntention: "", price: "", salePrice: "", category: "Bracelets", image: "" });
+    }
+  };
+
   if (loading) {
     return <div className="min-h-screen flex items-center justify-center bg-background font-serif text-2xl">Loading...</div>;
   }
@@ -142,12 +170,18 @@ export default function AdminDashboard() {
         </div>
 
         {/* TABS */}
-        <div className="flex gap-8 mb-12 border-b border-primary/10">
+        <div className="flex gap-8 mb-12 border-b border-primary/10 overflow-x-auto hide-scrollbar">
           <button 
             onClick={() => setActiveTab('orders')}
-            className={`pb-4 tracking-widest uppercase text-sm font-semibold transition-colors ${activeTab === 'orders' ? 'border-b-2 border-primary text-primary' : 'text-primary/40 hover:text-primary'}`}
+            className={`pb-4 whitespace-nowrap tracking-widest uppercase text-sm font-semibold transition-colors ${activeTab === 'orders' ? 'border-b-2 border-primary text-primary' : 'text-primary/40 hover:text-primary'}`}
           >
             Orders ({orders.filter(o => ['paid', 'pending_cod'].includes(o.status)).length} Pending)
+          </button>
+          <button 
+            onClick={() => setActiveTab('products')}
+            className={`pb-4 whitespace-nowrap tracking-widest uppercase text-sm font-semibold transition-colors ${activeTab === 'products' ? 'border-b-2 border-primary text-primary' : 'text-primary/40 hover:text-primary'}`}
+          >
+            Add Products
           </button>
           <button 
             onClick={() => setActiveTab('reviews')}
@@ -227,6 +261,69 @@ export default function AdminDashboard() {
               )})}
             </div>
           )
+        )}
+
+        {activeTab === 'products' && (
+          <div className="bg-white border border-primary/10 p-8 shadow-sm max-w-3xl">
+            <h2 className="font-serif text-2xl mb-6 text-primary">Add New Product</h2>
+            {productSuccess && <p className="text-green-600 mb-6 bg-green-50 p-4 border border-green-200">{productSuccess}</p>}
+            
+            <form onSubmit={handleAddProduct} className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-xs uppercase tracking-widest text-primary/60 mb-2">Product ID (Unique, e.g. amethyst-bracelet)</label>
+                  <input required type="text" value={newProduct.id} onChange={e => setNewProduct({...newProduct, id: e.target.value})} className="w-full bg-secondary/30 border border-primary/20 px-4 py-3 focus:outline-none focus:border-primary" />
+                </div>
+                <div>
+                  <label className="block text-xs uppercase tracking-widest text-primary/60 mb-2">Product Name</label>
+                  <input required type="text" value={newProduct.name} onChange={e => setNewProduct({...newProduct, name: e.target.value})} className="w-full bg-secondary/30 border border-primary/20 px-4 py-3 focus:outline-none focus:border-primary" />
+                </div>
+              </div>
+              
+              <div>
+                <label className="block text-xs uppercase tracking-widest text-primary/60 mb-2">Short Intention (e.g. "For peace and calm")</label>
+                <input required type="text" value={newProduct.shortIntention} onChange={e => setNewProduct({...newProduct, shortIntention: e.target.value})} className="w-full bg-secondary/30 border border-primary/20 px-4 py-3 focus:outline-none focus:border-primary" />
+              </div>
+
+              <div>
+                <label className="block text-xs uppercase tracking-widest text-primary/60 mb-2">Full Description</label>
+                <textarea required rows={4} value={newProduct.description} onChange={e => setNewProduct({...newProduct, description: e.target.value})} className="w-full bg-secondary/30 border border-primary/20 px-4 py-3 focus:outline-none focus:border-primary"></textarea>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div>
+                  <label className="block text-xs uppercase tracking-widest text-primary/60 mb-2">Price (₹)</label>
+                  <input required type="number" value={newProduct.price} onChange={e => setNewProduct({...newProduct, price: e.target.value})} className="w-full bg-secondary/30 border border-primary/20 px-4 py-3 focus:outline-none focus:border-primary" />
+                </div>
+                <div>
+                  <label className="block text-xs uppercase tracking-widest text-primary/60 mb-2">Sale Price (Optional, ₹)</label>
+                  <input type="number" value={newProduct.salePrice} onChange={e => setNewProduct({...newProduct, salePrice: e.target.value})} className="w-full bg-secondary/30 border border-primary/20 px-4 py-3 focus:outline-none focus:border-primary" />
+                </div>
+                <div>
+                  <label className="block text-xs uppercase tracking-widest text-primary/60 mb-2">Category</label>
+                  <select value={newProduct.category} onChange={e => setNewProduct({...newProduct, category: e.target.value})} className="w-full bg-secondary/30 border border-primary/20 px-4 py-3 focus:outline-none focus:border-primary">
+                    <option value="Bracelets">Bracelets</option>
+                    <option value="Love">Love</option>
+                    <option value="Abundance">Abundance</option>
+                    <option value="Calm">Calm</option>
+                    <option value="Protection">Protection</option>
+                    <option value="Confidence">Confidence</option>
+                    <option value="Focus">Focus</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs uppercase tracking-widest text-primary/60 mb-2">Image URL (e.g. from Unsplash or Imgur)</label>
+                <input required type="url" value={newProduct.image} onChange={e => setNewProduct({...newProduct, image: e.target.value})} placeholder="https://..." className="w-full bg-secondary/30 border border-primary/20 px-4 py-3 focus:outline-none focus:border-primary" />
+                <p className="text-xs text-primary/40 mt-2">Note: To upload images, you can create a public "products" bucket in your Supabase dashboard, upload your image there, and paste the URL here.</p>
+              </div>
+
+              <button type="submit" className="w-full py-4 bg-primary text-secondary tracking-widest uppercase hover:bg-accent transition-colors mt-4">
+                Add Product to Store
+              </button>
+            </form>
+          </div>
         )}
 
         {activeTab === 'reviews' && (
