@@ -286,7 +286,7 @@ function ProductContent() {
 
             {/* Accordions */}
             <div className="mt-12 flex flex-col border-t border-primary/10">
-              {['About the stone', 'How to wear', 'Care guide', 'Our energizing ritual', 'Frequently Asked Questions'].map((tab) => (
+              {['Description'].map((tab) => (
                 <div key={tab} className="border-b border-primary/10">
                   <button 
                     onClick={() => setActiveTab(activeTab === tab ? "" : tab)}
@@ -296,35 +296,42 @@ function ProductContent() {
                     <ChevronDown size={16} className={`transform transition-transform ${activeTab === tab ? "rotate-180" : ""}`} />
                   </button>
                   {activeTab === tab && (
-                    <div className="pb-5 text-sm font-light text-primary/70 leading-relaxed">
-                      {tab === 'About the stone' && (
-                        <div className="space-y-4">
-                          <p>{product.description}</p>
-                          <p className="text-xs italic opacity-70 mt-4">Note: The properties discussed here are traditionally associated with spiritual practices and crystal healing. They are not scientifically proven to cure or treat any medical conditions.</p>
-                        </div>
-                      )}
+                    <div className="pb-8 text-sm font-light text-primary/80 leading-relaxed space-y-8">
                       
-                      {tab === 'How to wear' && (
+                      {/* About the stone */}
+                      <div>
+                        <h3 className="text-primary tracking-widest uppercase text-xs font-semibold mb-3">About the Stone</h3>
+                        <p>{product.description}</p>
+                        <p className="text-xs italic opacity-70 mt-2">Note: The properties discussed here are traditionally associated with spiritual practices and crystal healing. They are not scientifically proven to cure or treat any medical conditions.</p>
+                      </div>
+                      
+                      {/* How to wear */}
+                      <div>
+                        <h3 className="text-primary tracking-widest uppercase text-xs font-semibold mb-3">How to Wear</h3>
                         <p>To maximize the benefits of your <strong>{product.name}</strong>, wear it on your <strong>left hand</strong> (the receiving side) to absorb its healing energy and invite its intentions into your life. Wear it on your <strong>right hand</strong> (the giving side) to project its energy outward and release blockages. You can wear it daily, but remember to consciously set your intention each morning when you put it on.</p>
-                      )}
+                      </div>
                       
-                      {tab === 'Care guide' && (
-                        <div className="space-y-2">
-                          <p>Crystals are natural minerals and require gentle care to maintain their beauty and energetic charge.</p>
-                          <ul className="list-disc pl-5 space-y-1 mt-2">
-                            <li>Keep your bracelet away from water, perfumes, lotions, and harsh chemicals to preserve both the elastic cord and the stone's natural polish.</li>
-                            <li>Cleanse its energy periodically by resting it on a Selenite charging plate, leaving it under the light of the full moon, or smudging it with sage.</li>
-                            <li>When not wearing, store it safely in the provided Riya Tarot pouch to prevent scratches and physical damage.</li>
-                          </ul>
-                        </div>
-                      )}
+                      {/* Care guide */}
+                      <div>
+                        <h3 className="text-primary tracking-widest uppercase text-xs font-semibold mb-3">Care Guide</h3>
+                        <p className="mb-2">Crystals are natural minerals and require gentle care to maintain their beauty and energetic charge.</p>
+                        <ul className="list-disc pl-5 space-y-1">
+                          <li>Keep your bracelet away from water, perfumes, lotions, and harsh chemicals to preserve both the elastic cord and the stone's natural polish.</li>
+                          <li>Cleanse its energy periodically by resting it on a Selenite charging plate, leaving it under the light of the full moon, or smudging it with sage.</li>
+                          <li>When not wearing, store it safely in the provided Riya Tarot pouch to prevent scratches and physical damage.</li>
+                        </ul>
+                      </div>
                       
-                      {tab === 'Our energizing ritual' && (
+                      {/* Our energizing ritual */}
+                      <div>
+                        <h3 className="text-primary tracking-widest uppercase text-xs font-semibold mb-3">Our Energizing Ritual</h3>
                         <p>At Riya Tarot Crystals, we believe in the profound power of energetic purity. Before your <strong>{product.name}</strong> is packed, it undergoes a sacred cleansing and energizing ritual. We use high-vibration sound frequencies, selenite charging plates, and herbal smoke to clear any stagnant energies it may have absorbed during its journey from the earth. This meticulous process ensures that when your bracelet arrives, it is a pure, vibrant canvas, ready to align entirely with your unique personal intentions.</p>
-                      )}
+                      </div>
                       
-                      {tab === 'Frequently Asked Questions' && (
-                        <div className="space-y-4 mt-2">
+                      {/* Frequently Asked Questions */}
+                      <div>
+                        <h3 className="text-primary tracking-widest uppercase text-xs font-semibold mb-4">Frequently Asked Questions</h3>
+                        <div className="space-y-4">
                           <div>
                             <strong className="block text-primary mb-1">How do I know this crystal is authentic?</strong>
                             All our crystals are ethically sourced, 100% natural, and meticulously verified. We do not sell dyed, heated, or synthetic glass stones.
@@ -338,7 +345,8 @@ function ProductContent() {
                             We accept returns only if you provide a continuous, unedited unboxing video showing the original seal being broken. See our Returns policy for full details.
                           </div>
                         </div>
-                      )}
+                      </div>
+
                     </div>
                   )}
                 </div>
