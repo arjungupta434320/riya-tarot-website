@@ -45,16 +45,8 @@ export default function Home() {
       {/* HERO SECTION */}
       <section ref={heroRef} className="relative h-[90vh] md:h-screen w-full bg-primary flex items-center overflow-hidden">
         <motion.div style={{ y }} className="absolute inset-0 w-full h-full bg-primary">
-          {/* Cinematic Video Background */}
-          <video
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-screen scale-105"
-          >
-            <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4" />
-          </video>
+          {/* Original Hero Image */}
+          <div className="absolute inset-0 bg-[url('/images/hero_background.jpg')] bg-cover bg-center opacity-60 mix-blend-luminosity transition-transform duration-[20000ms] hover:scale-110"></div>
           <div className="absolute inset-0 bg-primary/40 mix-blend-multiply"></div>
         </motion.div>
         
