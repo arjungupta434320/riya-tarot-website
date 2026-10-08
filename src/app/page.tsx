@@ -5,14 +5,14 @@ import Link from "next/link";
 import { motion, useScroll, useTransform } from "framer-motion";
 import React, { useRef } from "react";
 import { fetchProducts } from "@/data/products";
-import { ArrowRight, Star, ShieldCheck, Gift, Lock } from "lucide-react";
+import { ArrowRight, Star, ShieldCheck, Gem, Globe } from "lucide-react";
 import { useStore } from "@/store/useStore";
 
 const trustFeatures = [
   { icon: ShieldCheck, title: "HAND-FINISHED", desc: "Carefully presented crystal jewelry." },
   { icon: Star, title: "INTENTION PREPARED", desc: "Prepared as part of our spiritual ritual experience." },
-  { icon: Gift, title: "GIFT READY", desc: "Elegant packaging for meaningful gifting." },
-  { icon: Lock, title: "SECURE SHOPPING", desc: "Simple and secure online checkout." },
+  { icon: Gem, title: "HIGHEST GRADE", desc: "Premium quality natural stones." },
+  { icon: Globe, title: "AUTHENTICALLY SOURCED", desc: "Ethically mined and responsibly procured." },
 ];
 
 const intentions = [
