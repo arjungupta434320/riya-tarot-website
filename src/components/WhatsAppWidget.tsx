@@ -1,102 +1,171 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { MessageCircle, X, Send } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect, useRef } from "react";
+import { MessageCircle, X, ChevronRight } from "lucide-react";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { usePathname, useSearchParams } from "next/navigation";
+
+// --- CONFIGURATION ---
+const WHATSAPP_NUMBER = "919876543210";
 
 export default function WhatsAppWidget() {
   const [isOpen, setIsOpen] = useState(false);
-  const [message, setMessage] = useState("");
   const [mounted, setMounted] = useState(false);
+  const [productName, setProductName] = useState<string | null>(null);
+  
+  const widgetRef = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const prefersReducedMotion = useReducedMotion();
 
-  const whatsappNumber = "7889001587"; 
-
+  // Handle mounting and product detection
   useEffect(() => {
     setMounted(true);
-    const timer = setTimeout(() => {
-      const hasSeenWidget = localStorage.getItem("hasSeenChatWidget");
-      if (!hasSeenWidget) {
-        setIsOpen(true);
-        localStorage.setItem("hasSeenChatWidget", "true");
+    
+    // Attempt to read product name if on product page
+    if (pathname?.includes('/product')) {
+      // Find the main H1 which usually contains the product name on our product page
+      const h1 = document.querySelector('h1');
+      if (h1 && h1.innerText) {
+        setProductName(h1.innerText);
       }
-    }, 5000);
-    return () => clearTimeout(timer);
-  }, []);
+    } else {
+      setProductName(null);
+    }
+  }, [pathname, searchParams]);
 
-  const handleSend = () => {
-    if (!message.trim()) return;
-    const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
-    window.open(url, "_blank");
-    setMessage("");
+  // Handle Click Outside & Escape Key
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (widgetRef.current && !widgetRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    const handleEscKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener("keydown", handleEscKey);
+    }
+    
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleEscKey);
+    };
+  }, [isOpen]);
+
+  const openWhatsApp = (message: string) => {
+    const encodedMessage = encodeURIComponent(message);
+    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`;
+    window.open(url, "_blank", "noopener,noreferrer");
     setIsOpen(false);
   };
 
   if (!mounted) return null;
 
+  // Animation settings honoring prefers-reduced-motion
+  const animDuration = prefersReducedMotion ? 0 : 0.3;
+  const initialScale = prefersReducedMotion ? 1 : 0.95;
+  const initialY = prefersReducedMotion ? 0 : 20;
+
   return (
-    <div className="fixed bottom-6 right-6 z-[9999] flex flex-col items-end">
+    <div className="fixed bottom-4 right-4 md:bottom-5 md:right-5 z-[99999] flex flex-col items-end" ref={widgetRef}>
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: 20, scale: 0.95 }}
+            initial={{ opacity: 0, y: initialY, scale: initialScale }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            transition={{ duration: 0.3 }}
-            className="bg-white border border-primary/10 shadow-[0_20px_50px_rgba(0,0,0,0.15)] rounded-2xl mb-4 w-[320px] overflow-hidden flex flex-col origin-bottom-right"
+            exit={{ opacity: 0, y: initialY, scale: initialScale }}
+            transition={{ duration: animDuration, ease: "easeOut" }}
+            className="bg-[#FAFAFA] border border-primary/10 shadow-[0_15px_40px_rgba(0,0,0,0.12)] rounded-2xl mb-4 w-[90vw] max-w-[380px] overflow-hidden flex flex-col origin-bottom-right"
+            role="dialog"
+            aria-label="WhatsApp Support Chat"
           >
             {/* Header */}
-            <div className="bg-[#25D366] p-4 text-white flex justify-between items-center shadow-md z-10 relative">
+            <div className="bg-[#25D366] p-4 text-white flex justify-between items-center shadow-sm relative z-10">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+                <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0">
                   <MessageCircle size={22} className="text-white" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-[15px] leading-tight">Riya Tarot Support</h3>
+                  <h3 className="font-semibold text-sm tracking-wide">Riya Tarot Crystals</h3>
                   <p className="text-[11px] opacity-90 flex items-center gap-1.5 mt-0.5">
-                    <span className="w-2 h-2 bg-white rounded-full animate-pulse"></span>
-                    Typically replies instantly
+                    <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></span>
+                    Typically replies quickly
                   </p>
                 </div>
               </div>
               <button 
                 onClick={() => setIsOpen(false)}
                 className="text-white/80 hover:text-white transition-colors p-1"
+                aria-label="Close chatbox"
               >
                 <X size={20} />
               </button>
             </div>
 
-            {/* Chat Area */}
-            <div 
-              className="p-5 h-64 overflow-y-auto flex flex-col gap-4 relative"
-              style={{
-                backgroundColor: '#E5DDD5',
-                backgroundImage: 'url("https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png")',
-                backgroundSize: 'cover'
-              }}
-            >
-              <div className="bg-white p-3.5 rounded-2xl rounded-tl-none shadow-sm text-[13px] text-gray-800 max-w-[85%] relative self-start leading-relaxed">
-                Hi there! 👋<br/><br/>Welcome to Riya Tarot Crystals.<br/>How can we help you find the perfect crystal today?
-                <span className="text-[9px] text-gray-400 absolute bottom-1 right-2">Just now</span>
+            {/* Welcome Message Box */}
+            <div className="p-5 bg-white border-b border-primary/5">
+              <div className="bg-[#F5F5F5] p-4 rounded-xl rounded-tl-none shadow-sm text-[13px] text-primary/80 max-w-[90%] relative leading-relaxed">
+                <p className="font-semibold text-primary mb-1">Hi! Welcome to Riya Tarot Crystals.</p>
+                <p className="mb-3">Need help choosing the right crystal bracelet? We're happy to help.</p>
+                <p className="font-medium text-primary">How can we help you today?</p>
               </div>
             </div>
 
-            {/* Input Area */}
-            <div className="p-3 bg-[#f0f0f0] flex items-center gap-2">
-              <input
-                type="text"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-                placeholder="Type a message..."
-                className="flex-grow bg-white rounded-full px-4 py-2.5 text-[14px] focus:outline-none shadow-sm text-gray-800"
-              />
+            {/* Quick Action Buttons */}
+            <div className="p-4 flex flex-col gap-2.5 bg-white">
               <button
-                onClick={handleSend}
-                disabled={!message.trim()}
-                className="w-10 h-10 rounded-full bg-[#25D366] text-white flex items-center justify-center flex-shrink-0 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity shadow-sm"
+                onClick={() => openWhatsApp("Hi Riya Tarot Crystals! I need help choosing the best crystal bracelet for my intention. Can you recommend one for me?")}
+                className="w-full text-left bg-white border border-primary/15 hover:border-[#25D366] hover:bg-[#25D366]/5 transition-colors p-3.5 rounded-xl text-[13px] font-medium text-primary flex items-center justify-between group"
               >
-                <Send size={18} className="ml-1" />
+                Help me choose a crystal
+                <ChevronRight size={16} className="text-primary/40 group-hover:text-[#25D366] transition-colors" />
+              </button>
+              
+              <button
+                onClick={() => {
+                  const msg = productName 
+                    ? `Hi Riya Tarot Crystals! I'm interested in the ${productName} and would like to know more about it.`
+                    : "Hi Riya Tarot Crystals! I have a question about one of your crystal bracelets. Can you please help me?";
+                  openWhatsApp(msg);
+                }}
+                className="w-full text-left bg-white border border-primary/15 hover:border-[#25D366] hover:bg-[#25D366]/5 transition-colors p-3.5 rounded-xl text-[13px] font-medium text-primary flex items-center justify-between group"
+              >
+                Question about a bracelet
+                <ChevronRight size={16} className="text-primary/40 group-hover:text-[#25D366] transition-colors" />
+              </button>
+              
+              <button
+                onClick={() => openWhatsApp("Hi Riya Tarot Crystals! I would like to know more about placing an order for a crystal bracelet.")}
+                className="w-full text-left bg-white border border-primary/15 hover:border-[#25D366] hover:bg-[#25D366]/5 transition-colors p-3.5 rounded-xl text-[13px] font-medium text-primary flex items-center justify-between group"
+              >
+                I want to place an order
+                <ChevronRight size={16} className="text-primary/40 group-hover:text-[#25D366] transition-colors" />
+              </button>
+              
+              <button
+                onClick={() => openWhatsApp("Hi Riya Tarot Crystals! I visited your website and would like to speak with someone about crystal bracelets.")}
+                className="w-full text-left bg-white border border-primary/15 hover:border-[#25D366] hover:bg-[#25D366]/5 transition-colors p-3.5 rounded-xl text-[13px] font-medium text-primary flex items-center justify-between group"
+              >
+                Talk to us on WhatsApp
+                <ChevronRight size={16} className="text-primary/40 group-hover:text-[#25D366] transition-colors" />
+              </button>
+            </div>
+
+            {/* Footer */}
+            <div className="bg-[#FAFAFA] p-4 text-center border-t border-primary/5">
+              <p className="text-[11px] text-primary/60 mb-2">Need help finding your perfect crystal?</p>
+              <button
+                onClick={() => openWhatsApp("Hi Riya Tarot Crystals! I visited your website and would like help choosing the right crystal bracelet for me.")}
+                className="text-[12px] font-semibold text-[#25D366] hover:text-[#1da851] transition-colors inline-flex items-center gap-1"
+              >
+                Chat with us on WhatsApp &rarr;
               </button>
             </div>
           </motion.div>
@@ -105,7 +174,9 @@ export default function WhatsAppWidget() {
 
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-14 h-14 bg-[#25D366] text-white rounded-full shadow-[0_4px_20px_rgba(37,211,102,0.4)] flex items-center justify-center hover:scale-110 transition-transform duration-300 z-50 relative group"
+        aria-label="Chat with Riya Tarot Crystals on WhatsApp"
+        aria-expanded={isOpen}
+        className="w-14 h-14 bg-[#25D366] text-white rounded-full shadow-[0_4px_15px_rgba(37,211,102,0.3)] flex items-center justify-center hover:scale-110 transition-transform duration-300 z-50 relative group outline-none focus-visible:ring-4 focus-visible:ring-[#25D366]/50"
       >
         {isOpen ? <X size={26} /> : <MessageCircle size={30} />}
         
@@ -118,10 +189,10 @@ export default function WhatsAppWidget() {
         
         {/* Tooltip */}
         {!isOpen && (
-          <div className="absolute right-full mr-4 bg-white text-primary text-xs py-2 px-3 rounded-lg shadow-[0_5px_15px_rgba(0,0,0,0.1)] opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none font-medium">
-            Chat with us!
+          <div className="hidden md:block absolute right-full mr-4 bg-white text-primary text-xs py-2 px-3 rounded-lg shadow-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none font-medium">
+            Chat with us
             {/* Triangle pointer */}
-            <div className="absolute top-1/2 -right-1.5 -translate-y-1/2 border-y-8 border-y-transparent border-l-8 border-l-white"></div>
+            <div className="absolute top-1/2 -right-1 -translate-y-1/2 border-y-4 border-y-transparent border-l-4 border-l-white"></div>
           </div>
         )}
       </button>

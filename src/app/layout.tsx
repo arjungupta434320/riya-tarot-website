@@ -4,6 +4,9 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import CartDrawer from "@/components/CartDrawer";
+import WhatsAppWidget from "@/components/WhatsAppWidget";
+import React from "react";
+import { AuthProvider } from "@/components/AuthProvider";
 
 const playfair = Playfair_Display({
   variable: "--font-playfair",
@@ -25,8 +28,6 @@ export const metadata: Metadata = {
   description: "Hand-selected crystal bracelets designed for mindful rituals, meaningful gifting and everyday spiritual style.",
 };
 
-import { AuthProvider } from "@/components/AuthProvider";
-import WhatsAppWidget from "@/components/WhatsAppWidget";
 
 export default function RootLayout({
   children,
@@ -43,7 +44,9 @@ export default function RootLayout({
           </main>
           <Footer />
           <CartDrawer />
-          <WhatsAppWidget />
+          <React.Suspense fallback={null}>
+            <WhatsAppWidget />
+          </React.Suspense>
         </AuthProvider>
       </body>
     </html>
