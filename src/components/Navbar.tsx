@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Search, Heart, ShoppingCart, User, Menu, X } from "lucide-react";
 import { useStore } from "@/store/useStore";
@@ -41,25 +42,6 @@ export default function Navbar() {
 
   return (
     <>
-      {/* High CTA Announcement Bar */}
-      <div className="bg-primary text-secondary py-2 text-xs sm:text-sm tracking-widest uppercase relative z-[60] overflow-hidden flex whitespace-nowrap items-center">
-        <motion.div
-          animate={{ x: ["0%", "-50%"] }}
-          transition={{ repeat: Infinity, duration: 15, ease: "linear" }}
-          className="flex whitespace-nowrap min-w-max"
-        >
-          {/* We repeat the content twice to create a seamless infinite loop */}
-          {[...Array(2)].map((_, i) => (
-            <div key={i} className="flex items-center">
-              <span className="mx-8 font-semibold text-[#b85c38]">✨ SIGN UP & GET 20% OFF YOUR FIRST ORDER ✨</span>
-              <span className="mx-8">•</span>
-              <span className="mx-8">FREE SHIPPING ON ALL ORDERS</span>
-              <span className="mx-8">•</span>
-            </div>
-          ))}
-        </motion.div>
-      </div>
-
       <header
         className={`sticky top-0 w-full z-50 transition-all duration-300 ${
           isScrolled ? "bg-background/95 backdrop-blur-md shadow-sm py-4" : "bg-background md:bg-transparent py-4 md:py-6"
@@ -90,9 +72,14 @@ export default function Navbar() {
         {/* Center: Logo */}
         <div className="flex justify-center items-center z-40">
           <Link href="/" className="flex flex-col items-center">
-            <span className="text-sm sm:text-base md:text-lg xl:text-xl 2xl:text-2xl font-normal tracking-[0.1em] md:tracking-[0.15em] 2xl:tracking-[0.25em] text-center font-[family-name:var(--font-cinzel)] text-primary whitespace-nowrap">
-              RIYA TAROT CRYSTALS
-            </span>
+            <Image 
+              src="/logo.jpg" 
+              alt="Riya Tarot Crystals" 
+              width={180} 
+              height={180} 
+              className="h-12 w-auto md:h-[70px] mix-blend-multiply" 
+              priority 
+            />
           </Link>
         </div>
 
