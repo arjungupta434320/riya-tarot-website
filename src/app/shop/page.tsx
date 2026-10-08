@@ -6,13 +6,10 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { fetchProducts } from "@/data/products";
 import { useStore, Product } from "@/store/useStore";
-import { SlidersHorizontal, ChevronDown } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { motion } from "framer-motion";
 
-const categories = ["Bracelets"];
-
 function ShopContent() {
-  const [activeCategory, setActiveCategory] = useState("Bracelets");
   const [products, setProducts] = useState<Product[]>([]);
   const { addToCart } = useStore();
   
@@ -27,14 +24,13 @@ function ShopContent() {
   }, []);
 
   const filteredProducts = products.filter(p => {
-    const matchesCategory = activeCategory === "Bracelets" || p.category === activeCategory;
     const matchesSearch = !searchQuery || 
       (p.name && p.name.toLowerCase().includes(searchQuery)) || 
       (p.description && p.description.toLowerCase().includes(searchQuery)) || 
       (p.shortIntention && p.shortIntention.toLowerCase().includes(searchQuery)) ||
       (p.category && p.category.toLowerCase().includes(searchQuery));
       
-    return matchesCategory && matchesSearch;
+    return matchesSearch;
   }).sort((a, b) => {
     const priceA = a.salePrice || a.price;
     const priceB = b.salePrice || b.price;
@@ -45,51 +41,58 @@ function ShopContent() {
 
   return (
     <div className="min-h-screen pt-32 pb-24 bg-background">
-      <div className="container mx-auto px-6">
+      <div className="container mx-auto px-6 max-w-7xl">
         
-        {searchQuery && (
-          <div className="mb-8">
-            <h1 className="font-serif text-2xl md:text-3xl text-primary">
+        {searchQuery ? (
+          <div className="mb-12 text-center">
+            <h1 className="font-[family-name:var(--font-cinzel)] text-2xl md:text-4xl text-primary tracking-wide">
               Search results for "{searchQuery}"
             </h1>
             <button 
               onClick={() => window.location.href = '/shop'} 
-              className="text-xs tracking-widest uppercase border-b border-primary/20 text-primary/60 hover:text-primary mt-4"
+              className="text-[10px] tracking-[0.2em] uppercase border-b border-primary/20 text-primary/60 hover:text-primary mt-4 pb-1 transition-colors"
             >
               Clear Search
             </button>
           </div>
+        ) : (
+          <div className="mb-16 text-center">
+            <h1 className="font-[family-name:var(--font-cinzel)] text-3xl md:text-5xl text-primary tracking-[0.1em] mb-4">
+              THE COLLECTION
+            </h1>
+            <p className="text-muted text-sm md:text-base font-light max-w-2xl mx-auto">
+              Explore our curated selection of intention-based crystal bracelets. Each piece is crafted to support your personal journey.
+            </p>
+          </div>
         )}
 
-        <div className="flex flex-col md:flex-row justify-between items-end mb-12 border-b border-primary/10 pb-8">
-          <div>
-          </div>
-          
-          <div className="flex gap-4 mt-6 md:mt-0 relative">
+        <div className="flex flex-col md:flex-row justify-end items-end mb-12 border-b border-primary/10 pb-6 relative z-30">
+          <div className="flex gap-4 w-full md:w-auto relative">
             <button 
               onClick={() => setShowSort(!showSort)}
-              className="flex items-center gap-2 text-sm tracking-widest uppercase border border-primary/20 px-4 py-2 hover:bg-secondary transition-colors"
+              className="w-full md:w-auto flex items-center justify-between md:justify-center gap-3 text-[11px] tracking-[0.15em] font-medium uppercase border border-primary/20 px-6 py-3 hover:bg-secondary transition-colors"
             >
-              Sort By {sortOption === 'price-low' ? ': Price (Low)' : sortOption === 'price-high' ? ': Price (High)' : ''} <ChevronDown size={14} className={`transition-transform ${showSort ? 'rotate-180' : ''}`} />
+              Sort By {sortOption === 'price-low' ? ': Price (Low)' : sortOption === 'price-high' ? ': Price (High)' : ''} 
+              <ChevronDown size={14} className={`transition-transform ${showSort ? 'rotate-180' : ''}`} strokeWidth={1.5} />
             </button>
 
             {showSort && (
-              <div className="absolute top-full right-0 mt-2 w-48 bg-white border border-primary/10 shadow-xl z-50">
+              <div className="absolute top-full right-0 w-full md:w-48 bg-white border border-border shadow-md z-50">
                 <button 
                   onClick={() => { setSortOption('featured'); setShowSort(false); }}
-                  className="block w-full text-left px-4 py-3 text-xs tracking-widest uppercase hover:bg-secondary transition-colors"
+                  className="block w-full text-left px-5 py-3.5 text-[10px] font-medium tracking-[0.15em] uppercase hover:bg-secondary transition-colors text-primary"
                 >
                   Featured
                 </button>
                 <button 
                   onClick={() => { setSortOption('price-low'); setShowSort(false); }}
-                  className="block w-full text-left px-4 py-3 text-xs tracking-widest uppercase hover:bg-secondary transition-colors border-t border-primary/5"
+                  className="block w-full text-left px-5 py-3.5 text-[10px] font-medium tracking-[0.15em] uppercase hover:bg-secondary transition-colors border-t border-border text-primary"
                 >
                   Price: Low to High
                 </button>
                 <button 
                   onClick={() => { setSortOption('price-high'); setShowSort(false); }}
-                  className="block w-full text-left px-4 py-3 text-xs tracking-widest uppercase hover:bg-secondary transition-colors border-t border-primary/5"
+                  className="block w-full text-left px-5 py-3.5 text-[10px] font-medium tracking-[0.15em] uppercase hover:bg-secondary transition-colors border-t border-border text-primary"
                 >
                   Price: High to Low
                 </button>
@@ -98,78 +101,63 @@ function ShopContent() {
           </div>
         </div>
 
-        {/* Categories Mobile Scroll / Desktop Flex */}
-        <div className="flex gap-6 overflow-x-auto pb-4 mb-8 hide-scrollbar">
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setActiveCategory(cat)}
-              className={`text-xs tracking-widest uppercase whitespace-nowrap pb-1 transition-colors ${
-                activeCategory === cat 
-                  ? "border-b border-primary font-semibold" 
-                  : "text-primary/50 hover:text-primary"
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
-
-        {/* Product Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-10 md:gap-x-8 md:gap-y-16">
-          {filteredProducts.map((product, idx) => (
-            <motion.div 
-              key={product.id} 
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.5, delay: idx % 4 * 0.1 }}
-              className="group flex flex-col h-full"
-            >
-              <Link href={`/product?id=${product.id}`} className="relative aspect-square mb-4 bg-secondary overflow-hidden block">
-                <Image 
-                  src={product.image} 
-                  alt={product.name}
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-700"
-                />
-                <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <div className="absolute bottom-0 left-0 w-full p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300 flex gap-2">
-                  <button 
-                    onClick={(e) => {
-                      e.preventDefault();
-                      import("@/lib/animations").then(m => m.flyToCart(e, product.image));
-                      addToCart(product);
-                    }}
-                    className="flex-1 bg-primary text-secondary text-xs tracking-widest py-3 uppercase hover:bg-accent transition-colors magnetic-button"
-                  >
-                    Quick Add
-                  </button>
+        {filteredProducts.length === 0 ? (
+          <div className="text-center py-24">
+            <p className="text-primary/50 font-light mb-6">No products found matching your criteria.</p>
+            <Link href="/shop" className="text-[11px] tracking-widest uppercase border-b border-primary pb-1 text-primary hover:text-accent hover:border-accent transition-colors">
+              View All Products
+            </Link>
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-12 md:gap-x-6 md:gap-y-16">
+            {filteredProducts.map((product, idx) => (
+              <motion.div 
+                key={product.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: Math.min(idx * 0.05, 0.5) }}
+                className="group flex flex-col"
+              >
+                <div className="relative aspect-square mb-5 bg-secondary overflow-hidden">
+                  <Link href={`/product?id=${product.id}`} className="block absolute inset-0 z-0">
+                    <Image 
+                      src={product.image} 
+                      alt={product.name}
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-700"
+                    />
+                  </Link>
+                  <div className="absolute bottom-0 left-0 w-full p-3 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300 z-10 flex gap-2">
+                    <button 
+                      onClick={(e) => {
+                        e.preventDefault();
+                        import("@/lib/animations").then(m => m.flyToCart(e, product.image));
+                        addToCart(product, 1);
+                      }}
+                      className="flex-1 bg-white/90 backdrop-blur-sm border border-border text-primary text-[10px] font-medium tracking-[0.15em] py-3 uppercase hover:bg-primary hover:text-background transition-colors"
+                    >
+                      Quick Add
+                    </button>
+                  </div>
                 </div>
-              </Link>
-              <div className="text-center flex flex-col flex-grow">
-                <h3 className="text-sm tracking-widest uppercase font-semibold mb-1 hover:text-accent transition-colors">
-                  <Link href={`/product?id=${product.id}`}>{product.name}</Link>
-                </h3>
-                <p className="text-xs text-primary/60 font-light mb-2 flex-grow">{product.shortIntention}</p>
-                <div className="flex flex-col items-center gap-1.5 mt-auto">
+                
+                <div className="flex flex-col">
+                  <h3 className="text-xs tracking-widest uppercase font-semibold mb-1">
+                    <Link href={`/product?id=${product.id}`} className="hover:text-accent transition-colors text-primary">{product.name}</Link>
+                  </h3>
+                  <p className="text-[11px] text-muted font-light mb-2">{product.shortIntention || "Beautifully crafted bracelet"}</p>
+                  
                   <div className="flex items-center gap-2">
                     {product.salePrice && (
-                      <span className="text-xs text-primary/40 line-through">₹{product.price.toLocaleString('en-IN')}</span>
+                      <span className="text-[11px] text-muted line-through">₹{product.price.toLocaleString('en-IN')}</span>
                     )}
-                    <span className="text-sm font-medium text-primary">₹{(product.salePrice || product.price).toLocaleString('en-IN')}</span>
+                    <span className="text-[13px] font-medium text-primary">₹{(product.salePrice || product.price).toLocaleString('en-IN')}</span>
                   </div>
-                  {product.salePrice && (
-                    <span className="text-[10px] tracking-widest font-bold text-[#b85c38] uppercase animate-pulse border border-[#b85c38]/30 px-2 py-0.5 rounded bg-[#b85c38]/5">
-                      50% OFF
-                    </span>
-                  )}
                 </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-
+              </motion.div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
@@ -177,7 +165,11 @@ function ShopContent() {
 
 export default function Shop() {
   return (
-    <Suspense fallback={<div className="min-h-screen pt-32 pb-24 bg-background flex justify-center"><div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin"></div></div>}>
+    <Suspense fallback={
+      <div className="min-h-screen pt-32 pb-24 bg-background flex justify-center items-center">
+        <div className="animate-spin w-8 h-8 border-t-2 border-primary border-solid rounded-full"></div>
+      </div>
+    }>
       <ShopContent />
     </Suspense>
   );

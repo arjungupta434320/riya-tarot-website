@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Search, Heart, ShoppingCart, User, Menu, X } from "lucide-react";
+import { Search, ShoppingCart, User, Menu, X } from "lucide-react";
 import { useStore } from "@/store/useStore";
 import { motion, AnimatePresence } from "framer-motion";
 import { fetchProducts } from "@/data/products";
@@ -15,17 +15,14 @@ export default function Navbar() {
   const [searchQuery, setSearchQuery] = useState("");
   const [products, setProducts] = useState<any[]>([]);
   const router = useRouter();
-  const { cart, wishlist, toggleCart, setDrawerTab } = useStore();
+  const { cart, toggleCart, setDrawerTab } = useStore();
 
   const cartItemsCount = cart.reduce((total, item) => total + item.quantity, 0);
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll);
-    
-    // Fetch products for instant search
     fetchProducts().then(setProducts);
-    
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -41,185 +38,164 @@ export default function Navbar() {
 
   return (
     <>
-      {/* High CTA Announcement Bar */}
-      <div className="bg-primary text-secondary py-2 text-xs sm:text-sm tracking-widest uppercase relative z-[60] overflow-hidden flex whitespace-nowrap items-center">
-        <motion.div
-          animate={{ x: ["0%", "-50%"] }}
-          transition={{ repeat: Infinity, duration: 15, ease: "linear" }}
-          className="flex whitespace-nowrap min-w-max"
-        >
-          {/* We repeat the content twice to create a seamless infinite loop */}
-          {[...Array(2)].map((_, i) => (
-            <div key={i} className="flex items-center">
-              <span className="mx-8 font-semibold text-[#b85c38]">✨ SIGN UP & GET 20% OFF YOUR FIRST ORDER ✨</span>
-              <span className="mx-8">•</span>
-              <span className="mx-8">FREE SHIPPING ON ALL ORDERS</span>
-              <span className="mx-8">•</span>
-            </div>
-          ))}
-        </motion.div>
-      </div>
-
       <header
-        className={`sticky top-0 w-full z-50 transition-all duration-300 ${
-          isScrolled ? "bg-background/95 backdrop-blur-md shadow-sm py-4" : "bg-background md:bg-transparent py-4 md:py-6"
+        className={`sticky top-0 w-full z-50 transition-all duration-500 ${
+          isScrolled 
+            ? "bg-background/80 backdrop-blur-lg border-b border-border shadow-[0_4px_30px_rgba(0,0,0,0.03)] py-4" 
+            : "bg-background py-6"
         }`}
       >
-        <div className="container mx-auto h-[60px] md:h-[80px] px-4 md:px-6 grid grid-cols-3 items-center">
+        <div className="container mx-auto px-6 grid grid-cols-3 items-center">
         
-        {/* Left: Mobile Hamburger & Desktop Links */}
-        <div className="flex justify-start items-center z-50">
-          <button 
-            type="button"
-            className="xl:hidden text-foreground p-2 -ml-2 cursor-pointer"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            aria-label="Toggle Menu"
-          >
-            {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
-          </button>
-          
-          <nav className="hidden xl:flex gap-3 xl:gap-4 2xl:gap-6 text-[10px] xl:text-xs tracking-widest uppercase whitespace-nowrap">
-            <Link href="/" className="hover:text-accent transition-colors">Home</Link>
-            <Link href="/shop" className="hover:text-accent transition-colors">Shop All</Link>
-            <Link href="/quiz" className="hover:text-accent transition-colors">Crystal Quiz</Link>
-            <Link href="/about" className="hover:text-accent transition-colors">About Us</Link>
-            <Link href="/track" className="hover:text-accent transition-colors">Track Order</Link>
-          </nav>
-        </div>
-
-        {/* Center: Logo */}
-        <div className="flex justify-center items-center z-40">
-          <Link href="/" className="flex flex-col items-center">
-            <span className="text-sm sm:text-base md:text-lg xl:text-xl 2xl:text-2xl font-normal tracking-[0.1em] md:tracking-[0.15em] 2xl:tracking-[0.25em] text-center font-[family-name:var(--font-cinzel)] text-primary whitespace-nowrap">
-              RIYA TAROT CRYSTALS
-            </span>
-          </Link>
-        </div>
-
-        {/* Right Nav */}
-        <div className="flex justify-end items-center gap-3 sm:gap-4 md:gap-6 z-50">
-          <Link href="/account" className="hover:text-accent transition-colors">
-            <User size={20} className="md:w-5 md:h-5 w-[22px] h-[22px]" />
-          </Link>
-          <button 
-            onClick={() => {
-              setDrawerTab('wishlist');
-              toggleCart();
-            }}
-            className="hover:text-accent transition-colors relative"
-          >
-            <Heart size={20} className="md:w-5 md:h-5 w-[22px] h-[22px]" />
-            {wishlist.length > 0 && (
-              <span className="absolute -top-2 -right-2 bg-accent text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full">
-                {wishlist.length}
-              </span>
-            )}
-          </button>
-          <button 
-            id="cart-icon"
-            onClick={() => {
-              setDrawerTab('cart');
-              toggleCart();
-            }}
-            className="hover:text-accent transition-colors relative p-2 -mr-2 md:p-0 md:mr-0"
-          >
-            <ShoppingCart size={24} className="md:w-5 md:h-5" />
-            {cartItemsCount > 0 && (
-              <span className="absolute top-0 right-0 md:-top-2 md:-right-2 bg-accent text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full">
-                {cartItemsCount}
-              </span>
-            )}
-          </button>
-        </div>
-      </div>
-
-      {/* Persistent Search Bar Below Header */}
-      <div className="w-full bg-background border-t border-primary/10 overflow-visible relative z-[9999]">
-        <div className="container mx-auto px-4 py-3 md:py-4 relative">
-          <form onSubmit={handleSearchSubmit} className="relative max-w-2xl mx-auto flex items-center group">
-            <Search size={18} className="absolute left-4 text-primary/40" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search for bracelets, intentions, crystals..."
-              className="w-full bg-secondary/50 border border-primary/20 py-3 pl-12 pr-24 focus:outline-none focus:border-primary transition-colors text-sm"
-            />
-            <button type="submit" className="absolute right-4 text-xs font-semibold tracking-widest uppercase hover:text-accent transition-colors">
-              Search
+          {/* Left: Desktop Links & Mobile Hamburger */}
+          <div className="flex justify-start items-center">
+            <button 
+              type="button"
+              className="lg:hidden text-primary p-2 -ml-2"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              aria-label="Toggle Menu"
+            >
+              {isMobileMenuOpen ? <X size={24} strokeWidth={1.5} /> : <Menu size={24} strokeWidth={1.5} />}
             </button>
             
-            {/* Instant Visual Search Overlay */}
-            <AnimatePresence>
-              {searchQuery.trim().length > 1 && (
-                <motion.div 
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 10 }}
-                  className="absolute top-full left-0 w-full mt-2 bg-background border border-primary/10 shadow-2xl z-[100] max-h-[70vh] overflow-y-auto"
-                >
-                  <div className="p-4 border-b border-primary/5">
-                    <span className="text-xs tracking-widest uppercase text-primary/50">Instant Results</span>
-                  </div>
-                  {(() => {
-                    const results = products.filter(p => 
-                      p.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                      (p.shortIntention && p.shortIntention.toLowerCase().includes(searchQuery.toLowerCase())) ||
-                      (p.description && p.description.toLowerCase().includes(searchQuery.toLowerCase()))
-                    ).slice(0, 4);
+            <nav className="hidden lg:flex items-center gap-6 xl:gap-8 text-[11px] tracking-[0.15em] uppercase font-medium text-primary">
+              <Link href="/shop" className="hover:text-accent transition-colors">Shop</Link>
+              <Link href="/quiz" className="hover:text-accent transition-colors">Find Your Crystal</Link>
+              <Link href="/about" className="hover:text-accent transition-colors">About</Link>
+            </nav>
+          </div>
 
-                    if (results.length === 0) {
-                      return <div className="p-6 text-center text-sm text-primary/50">No products found for "{searchQuery}"</div>;
-                    }
+          {/* Center: Logo */}
+          <div className="flex justify-center items-center">
+            <Link href="/" className="flex flex-col items-center group">
+              <span className="text-base sm:text-lg lg:text-xl tracking-[0.2em] md:tracking-[0.25em] text-center font-[family-name:var(--font-cinzel)] text-primary group-hover:opacity-80 transition-opacity">
+                RIYA TAROT CRYSTALS
+              </span>
+            </Link>
+          </div>
 
-                    return (
-                      <div className="flex flex-col">
-                        {results.map(product => (
-                          <Link 
-                            href={`/product?id=${product.id}`} 
-                            key={product.id}
-                            onClick={() => setSearchQuery("")}
-                            className="flex items-center gap-4 p-4 hover:bg-secondary/50 transition-colors border-b border-primary/5 last:border-0"
-                          >
-                            <div className="w-16 h-16 bg-secondary relative flex-shrink-0">
-                              <img src={product.image} alt={product.name} className="absolute inset-0 w-full h-full object-cover" />
-                            </div>
-                            <div className="flex-grow">
-                              <h4 className="text-sm font-semibold tracking-widest uppercase">{product.name}</h4>
-                              <p className="text-xs text-primary/60 mt-1">{product.shortIntention}</p>
-                            </div>
-                            <div className="text-sm font-medium text-primary whitespace-nowrap">
-                              ₹{(product.salePrice || product.price).toLocaleString('en-IN')}
-                            </div>
-                          </Link>
-                        ))}
-                        <button 
-                          onClick={handleSearchSubmit}
-                          className="p-4 bg-secondary/20 text-xs tracking-widest uppercase text-center hover:bg-primary hover:text-secondary transition-colors"
-                        >
-                          View All Results
-                        </button>
-                      </div>
-                    );
-                  })()}
-                </motion.div>
+          {/* Right Nav */}
+          <div className="flex justify-end items-center gap-5">
+            <button 
+              onClick={() => setIsSearchOpen(!isSearchOpen)}
+              className="hover:text-accent transition-colors text-primary"
+            >
+              <Search size={20} strokeWidth={1.5} />
+            </button>
+            <Link href="/account" className="hidden sm:block hover:text-accent transition-colors text-primary">
+              <User size={20} strokeWidth={1.5} />
+            </Link>
+            <button 
+              id="cart-icon"
+              onClick={() => {
+                setDrawerTab('cart');
+                toggleCart();
+              }}
+              className="hover:text-accent transition-colors relative text-primary p-2 -mr-2 sm:p-0 sm:mr-0"
+            >
+              <ShoppingCart size={20} strokeWidth={1.5} />
+              {cartItemsCount > 0 && (
+                <span className="absolute top-0 right-0 sm:-top-2 sm:-right-2 bg-primary text-secondary text-[9px] w-4 h-4 flex items-center justify-center rounded-full font-medium">
+                  {cartItemsCount}
+                </span>
               )}
-            </AnimatePresence>
-          </form>
+            </button>
+          </div>
         </div>
-      </div>
 
-      {/* Mobile/Tablet Menu Dropdown */}
-      {isMobileMenuOpen && (
-        <div className="xl:hidden absolute top-full left-0 w-full bg-background/95 backdrop-blur-md border-t border-warm-beige/30 py-6 px-6 flex flex-col gap-4 shadow-2xl z-[100] h-screen">
-          <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="text-base tracking-widest uppercase py-3 border-b border-warm-beige/20 text-foreground">Home</Link>
-          <Link href="/shop" onClick={() => setIsMobileMenuOpen(false)} className="text-base tracking-widest uppercase py-3 border-b border-warm-beige/20 text-foreground">Shop All</Link>
-          <Link href="/quiz" onClick={() => setIsMobileMenuOpen(false)} className="text-base tracking-widest uppercase py-3 border-b border-warm-beige/20 text-foreground">Crystal Quiz</Link>
-          <Link href="/about" onClick={() => setIsMobileMenuOpen(false)} className="text-base tracking-widest uppercase py-3 border-b border-warm-beige/20 text-foreground">About Us</Link>
-          <Link href="/track" onClick={() => setIsMobileMenuOpen(false)} className="text-base tracking-widest uppercase py-3 border-b border-warm-beige/20 text-foreground">Track Order</Link>
-        </div>
-      )}
-    </header>
+        {/* Dropdown Search */}
+        <AnimatePresence>
+          {isSearchOpen && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              className="absolute top-full left-0 w-full bg-background border-b border-border overflow-hidden shadow-sm"
+            >
+              <div className="container mx-auto px-6 py-6">
+                <form onSubmit={handleSearchSubmit} className="relative max-w-2xl mx-auto flex items-center group">
+                  <Search size={18} className="absolute left-4 text-primary/40" strokeWidth={1.5} />
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search for intention, crystal or color..."
+                    className="w-full bg-secondary/30 border border-primary/10 rounded-sm py-3.5 pl-12 pr-24 focus:outline-none focus:border-primary transition-colors text-sm text-primary"
+                    autoFocus
+                  />
+                  <button type="submit" className="absolute right-4 text-[11px] font-semibold tracking-widest uppercase hover:text-accent transition-colors">
+                    Search
+                  </button>
+                </form>
+
+                {searchQuery.trim().length > 1 && (
+                  <div className="max-w-2xl mx-auto mt-4 bg-white border border-primary/5 shadow-sm rounded-sm overflow-hidden">
+                    {(() => {
+                      const results = products.filter(p => 
+                        p.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                        (p.shortIntention && p.shortIntention.toLowerCase().includes(searchQuery.toLowerCase()))
+                      ).slice(0, 3);
+
+                      if (results.length === 0) return <div className="p-4 text-center text-sm text-primary/50">No results found</div>;
+
+                      return (
+                        <div className="flex flex-col">
+                          {results.map(product => (
+                            <Link 
+                              href={`/product?id=${product.id}`} 
+                              key={product.id}
+                              onClick={() => {
+                                setIsSearchOpen(false);
+                                setSearchQuery("");
+                              }}
+                              className="flex items-center gap-4 p-4 hover:bg-secondary/20 transition-colors border-b border-primary/5 last:border-0"
+                            >
+                              <div className="w-12 h-12 bg-secondary relative">
+                                <img src={product.image} alt={product.name} className="absolute inset-0 w-full h-full object-cover rounded-sm" />
+                              </div>
+                              <div className="flex-grow">
+                                <h4 className="text-xs font-semibold tracking-widest uppercase text-primary">{product.name}</h4>
+                                <p className="text-[11px] text-muted mt-1">{product.shortIntention}</p>
+                              </div>
+                            </Link>
+                          ))}
+                        </div>
+                      );
+                    })()}
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </header>
+
+      {/* Mobile Menu */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div 
+            initial={{ opacity: 0, x: "-100%" }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: "-100%" }}
+            transition={{ type: "tween", duration: 0.3 }}
+            className="fixed inset-0 bg-background z-[100] flex flex-col pt-24 px-6"
+          >
+            <button 
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="absolute top-6 left-6 text-primary"
+            >
+              <X size={28} strokeWidth={1.5} />
+            </button>
+            <nav className="flex flex-col gap-8 text-lg tracking-[0.2em] uppercase font-light font-serif mt-12">
+              <Link href="/" onClick={() => setIsMobileMenuOpen(false)}>Home</Link>
+              <Link href="/shop" onClick={() => setIsMobileMenuOpen(false)}>Shop Collection</Link>
+              <Link href="/quiz" onClick={() => setIsMobileMenuOpen(false)}>Crystal Quiz</Link>
+              <Link href="/about" onClick={() => setIsMobileMenuOpen(false)}>Brand Story</Link>
+              <Link href="/account" onClick={() => setIsMobileMenuOpen(false)}>My Account</Link>
+            </nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }

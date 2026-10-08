@@ -1,15 +1,15 @@
 @import "tailwindcss";
 
 :root {
-  --background: #FFFDF8;
-  --foreground: #382400;
+  --background: #FCFBF9; /* Warm Ivory / Off-White */
+  --foreground: #1C1B1A; /* Deep Charcoal */
   
-  --color-primary: #7D5306;
-  --color-secondary: #F6EDDC;
-  --color-accent: #F4B139;
+  --color-primary: #1C1B1A; /* Deep Charcoal for buttons/headings */
+  --color-secondary: #F3F0EB; /* Warm Sand / Beige */
+  --color-accent: #C5B39A; /* Muted Champagne Gold */
   
-  --color-soft-purple: #C4A0CC;
-  --color-warm-beige: #BCAC8C;
+  --color-muted: #7A7571; /* Muted Taupe / Warm Gray */
+  --color-border: #E8E4DF; /* Soft border color */
 }
 
 @theme inline {
@@ -19,8 +19,8 @@
   --color-primary: var(--color-primary);
   --color-secondary: var(--color-secondary);
   --color-accent: var(--color-accent);
-  --color-soft-purple: var(--color-soft-purple);
-  --color-warm-beige: var(--color-warm-beige);
+  --color-muted: var(--color-muted);
+  --color-border: var(--color-border);
 
   --font-serif: "Playfair Display", Georgia, serif;
   --font-sans: "Inter", system-ui, sans-serif;
@@ -37,9 +37,10 @@ h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-serif);
 }
 
-.magnetic-button {
-  transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), background-color 0.3s;
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
 }
-.magnetic-button:hover {
-  transform: translateY(-2px);
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
