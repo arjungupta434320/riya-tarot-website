@@ -94,7 +94,23 @@ export default function Home() {
           </div>
         </div>
       </section>
-
+      {/* QUIZ BANNER */}
+      <section className="border-y border-primary/10 bg-background relative overflow-hidden">
+        <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, black 1px, transparent 0)', backgroundSize: '32px 32px' }}></div>
+        <Link href="/quiz" className="block relative z-10 py-16 md:py-20 group hover:bg-primary/[0.02] transition-colors duration-500">
+          <div className="container mx-auto px-6 text-center flex flex-col items-center">
+            <h2 className="text-2xl md:text-4xl lg:text-5xl font-[family-name:var(--font-cinzel)] font-bold text-primary tracking-[0.15em] mb-4">
+              FIND YOUR PERFECT CRYSTAL
+            </h2>
+            <p className="text-sm text-primary/60 mb-8 max-w-lg mx-auto tracking-wide">
+              Take our personalized energy quiz to discover which crystal aligns with your current intentions.
+            </p>
+            <div className="inline-flex items-center gap-2 text-xs tracking-widest uppercase border border-primary px-8 py-4 font-semibold group-hover:bg-primary group-hover:text-secondary transition-all duration-300">
+              Take the Quiz <ArrowRight size={16} />
+            </div>
+          </div>
+        </Link>
+      </section>
       {/* SHOP BY INTENTION */}
       <section id="collections" className="py-16 md:py-24 bg-background">
         <div className="container mx-auto px-6">

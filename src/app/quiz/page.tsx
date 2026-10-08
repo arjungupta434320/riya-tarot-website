@@ -1,43 +1,41 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Sparkles, ArrowRight, ArrowLeft } from "lucide-react";
 import { supabase } from "@/lib/supabase";
-import { Product } from "@/store/useStore";
+import { Product, useStore } from "@/store/useStore";
 
 const questions = [
   {
     id: 1,
-    title: "What are you seeking to invite into your life right now?",
+    title: "What do you need the most right now?",
     options: [
-      { text: "Love & Deep Connections", category: "Love" },
-      { text: "Financial Growth & Success", category: "Abundance" },
-      { text: "Inner Peace & Stress Relief", category: "Calm" },
-      { text: "Grounding & Energy Shielding", category: "Protection" },
-      { text: "Self-Belief & Empowerment", category: "Confidence" },
-      { text: "Mental Clarity & Motivation", category: "Focus" }
+      { text: "Love & Healing", category: "Love" },
+      { text: "Money & Success", category: "Abundance" },
+      { text: "Peace & Calm", category: "Calm" },
+      { text: "Protection & Boundaries", category: "Protection" }
     ]
   },
   {
     id: 2,
-    title: "Which element do you feel most drawn to today?",
+    title: "Which color calls out to your soul?",
     options: [
-      { text: "Earth (Stability & Growth)" },
-      { text: "Water (Flow & Emotion)" },
-      { text: "Fire (Passion & Action)" },
-      { text: "Air (Clarity & Spirit)" }
+      { text: "Soft Pinks & Deep Reds" },
+      { text: "Calming Blues & Greens" },
+      { text: "Warm Yellows & Golds" },
+      { text: "Protective Blacks & Browns" }
     ]
   },
   {
     id: 3,
-    title: "If you could close your eyes and be anywhere, where would you be?",
+    title: "How do you plan to use your crystals?",
     options: [
-      { text: "A quiet, lush forest" },
-      { text: "Listening to the ocean waves" },
-      { text: "Sitting by a warm, crackling fire" },
-      { text: "On a mountain top with a clear sky" }
+      { text: "Daily Wear (Jewelry)" },
+      { text: "Meditation & Manifestation" },
+      { text: "Placing in my Home/Office" },
+      { text: "A Gift for someone special" }
     ]
   }
 ];
@@ -46,8 +44,9 @@ export default function CrystalQuiz() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<Record<number, string>>({});
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [recommendation, setRecommendation] = useState<Product | null>(null);
+  const [recommendations, setRecommendations] = useState<Product[]>([]);
   const [error, setError] = useState(false);
+  const addToCart = useStore((state) => state.addToCart);
 
   const handleSelectOption = (option: any) => {
     const newAnswers = { ...answers, [currentQuestion]: option.category || option.text };
@@ -56,7 +55,7 @@ export default function CrystalQuiz() {
     if (currentQuestion < questions.length - 1) {
       setTimeout(() => {
         setCurrentQuestion(currentQuestion + 1);
-      }, 400); // slight delay for visual feedback
+      }, 400);
     } else {
       analyzeResults(newAnswers);
     }
@@ -65,32 +64,30 @@ export default function CrystalQuiz() {
   const analyzeResults = async (finalAnswers: Record<number, string>) => {
     setIsAnalyzing(true);
     
-    // The first question determines the category
-    const targetCategory = finalAnswers[0] || "Calm";
+    // The first question determines the primary category
+    const targetCategory = finalAnswers[0] || "Love";
 
     try {
       const { data, error } = await supabase
         .from('products')
         .select('*')
         .eq('category', targetCategory)
-        .limit(1);
+        .limit(2);
         
       if (error) throw error;
       
-      if (data && data.length > 0) {
-        // Fake delay for "analyzing energy" effect
-        setTimeout(() => {
-          setRecommendation(data[0] as Product);
-          setIsAnalyzing(false);
-        }, 2000);
-      } else {
-        // Fallback if no product in that category
-        const { data: fallbackData } = await supabase.from('products').select('*').limit(1);
-        setTimeout(() => {
-          setRecommendation((fallbackData?.[0] as Product) || null);
-          setIsAnalyzing(false);
-        }, 2000);
+      let finalRecs = data as Product[];
+      
+      // If we didn't find 2 products, fallback and get any 2
+      if (finalRecs.length < 2) {
+        const { data: fallbackData } = await supabase.from('products').select('*').limit(2);
+        finalRecs = fallbackData as Product[] || [];
       }
+
+      setTimeout(() => {
+        setRecommendations(finalRecs);
+        setIsAnalyzing(false);
+      }, 2500);
     } catch (err) {
       console.error("Quiz error", err);
       setError(true);
@@ -101,28 +98,34 @@ export default function CrystalQuiz() {
   const resetQuiz = () => {
     setCurrentQuestion(0);
     setAnswers({});
-    setRecommendation(null);
+    setRecommendations([]);
     setIsAnalyzing(false);
     setError(false);
   };
 
+  const addBothToBag = (e: React.MouseEvent) => {
+    import("@/lib/animations").then(m => m.flyToCart(e, recommendations[0].image));
+    recommendations.forEach(product => addToCart(product, 1));
+    setTimeout(() => useStore.setState({ isCartOpen: true }), 800);
+  };
+
   return (
     <div className="min-h-screen pt-32 pb-24 bg-background flex flex-col items-center">
-      <div className="container mx-auto px-6 max-w-3xl">
+      <div className="container mx-auto px-6 max-w-4xl">
         
-        {!isAnalyzing && !recommendation && (
+        {!isAnalyzing && recommendations.length === 0 && (
           <>
             <div className="text-center mb-12">
               <div className="w-16 h-16 mx-auto bg-primary text-secondary rounded-full flex items-center justify-center mb-6">
                 <Sparkles size={24} />
               </div>
-              <h1 className="font-serif text-3xl md:text-5xl mb-4 text-primary">Crystal Finder Quiz</h1>
+              <h1 className="font-[family-name:var(--font-cinzel)] text-3xl md:text-5xl mb-4 text-primary tracking-[0.1em]">Crystal Finder Quiz</h1>
               <p className="text-primary/70 text-sm md:text-base max-w-lg mx-auto">
-                Let your intuition guide you. Answer a few simple questions and we will reveal the crystal whose energy perfectly aligns with your current journey.
+                Let your intuition guide you. Answer 3 simple questions and we will reveal the crystals whose energy perfectly aligns with your current journey.
               </p>
             </div>
 
-            <div className="bg-white border border-primary/10 p-8 md:p-12 shadow-sm">
+            <div className="bg-white border border-primary/10 p-8 md:p-12 shadow-sm max-w-3xl mx-auto">
               <div className="flex justify-between items-center mb-8 text-xs tracking-widest text-primary/40 uppercase">
                 <span>Question {currentQuestion + 1} of {questions.length}</span>
                 {currentQuestion > 0 && (
@@ -132,7 +135,7 @@ export default function CrystalQuiz() {
                 )}
               </div>
               
-              <h2 className="font-serif text-2xl md:text-3xl mb-8 text-center">
+              <h2 className="font-[family-name:var(--font-cinzel)] text-2xl md:text-3xl mb-8 text-center text-primary">
                 {questions[currentQuestion].title}
               </h2>
               
@@ -141,7 +144,7 @@ export default function CrystalQuiz() {
                   <button
                     key={idx}
                     onClick={() => handleSelectOption(opt)}
-                    className="border border-primary/20 p-6 text-sm hover:bg-secondary hover:border-primary transition-all duration-300 text-center"
+                    className="border border-primary/20 p-6 text-sm font-semibold tracking-wide hover:bg-secondary hover:border-primary transition-all duration-300 text-center"
                   >
                     {opt.text}
                   </button>
@@ -154,49 +157,64 @@ export default function CrystalQuiz() {
         {isAnalyzing && (
           <div className="flex flex-col items-center justify-center py-24 text-center">
             <div className="w-16 h-16 border-t-2 border-primary border-solid rounded-full animate-spin mb-8"></div>
-            <h2 className="font-serif text-2xl md:text-3xl text-primary mb-4 animate-pulse">Reading your energy...</h2>
-            <p className="text-primary/60 font-light">Finding the perfect crystal for your intentions.</p>
+            <h2 className="font-[family-name:var(--font-cinzel)] text-2xl md:text-3xl text-primary mb-4 animate-pulse tracking-widest">Reading your energy...</h2>
+            <p className="text-primary/60 font-light tracking-wide">Calculating your Aura profile and finding the perfect crystals.</p>
           </div>
         )}
 
-        {recommendation && !isAnalyzing && (
+        {recommendations.length > 0 && !isAnalyzing && (
           <div className="text-center animate-in fade-in zoom-in duration-700">
-            <h2 className="text-xs tracking-[0.2em] uppercase text-accent mb-4 font-semibold">Your Perfect Match</h2>
-            <h1 className="font-serif text-4xl md:text-5xl mb-8 text-primary">The Universe Chose...</h1>
+            <h2 className="text-xs tracking-[0.2em] uppercase text-accent mb-4 font-bold">Your Aura Profile Match</h2>
+            <h1 className="font-[family-name:var(--font-cinzel)] text-3xl md:text-5xl mb-12 text-primary tracking-wide">The Universe Chose These For You</h1>
             
-            <div className="bg-white border border-primary/10 p-6 md:p-10 shadow-lg max-w-2xl mx-auto flex flex-col md:flex-row gap-8 text-left items-center">
-              <div className="w-full md:w-1/2 aspect-square relative bg-secondary">
-                <Image 
-                  src={recommendation.image || "https://images.unsplash.com/photo-1598046125712-4299b9eb2491"} 
-                  alt={recommendation.name}
-                  fill
-                  className="object-cover"
-                />
-              </div>
-              <div className="w-full md:w-1/2 flex flex-col justify-center">
-                <h3 className="font-serif text-2xl mb-2">{recommendation.name}</h3>
-                <p className="text-xl text-primary mb-4">₹{(recommendation.salePrice || recommendation.price).toLocaleString('en-IN')}</p>
-                <div className="w-8 h-px bg-primary/20 mb-4"></div>
-                <p className="text-sm font-light leading-relaxed text-primary/80 mb-6 line-clamp-4">
-                  {recommendation.description}
-                </p>
-                
-                <div className="flex flex-col gap-3">
-                  <Link 
-                    href={`/product?id=${recommendation.id}`}
-                    className="w-full bg-primary text-secondary text-center text-xs tracking-widest uppercase py-4 hover:bg-accent transition-colors block"
-                  >
-                    View Your Crystal
+            <div className="grid md:grid-cols-2 gap-8 mb-12">
+              {recommendations.map((rec) => (
+                <div key={rec.id} className="bg-white border border-primary/10 shadow-lg group relative flex flex-col">
+                  <Link href={`/product?id=${rec.id}`} className="block relative aspect-square bg-secondary overflow-hidden">
+                    <Image 
+                      src={rec.image || "https://images.unsplash.com/photo-1598046125712-4299b9eb2491"} 
+                      alt={rec.name}
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-700"
+                    />
                   </Link>
-                  <button 
-                    onClick={resetQuiz}
-                    className="w-full border border-primary/20 text-primary text-center text-xs tracking-widest uppercase py-4 hover:bg-secondary transition-colors"
-                  >
-                    Retake Quiz
-                  </button>
+                  <div className="p-6 flex flex-col flex-grow">
+                    <h3 className="font-[family-name:var(--font-cinzel)] font-bold text-xl mb-2 text-primary tracking-wide">{rec.name}</h3>
+                    <p className="text-lg text-primary font-medium mb-4">₹{(rec.salePrice || rec.price).toLocaleString('en-IN')}</p>
+                    <p className="text-xs font-light leading-relaxed text-primary/70 line-clamp-3 mb-6 flex-grow">
+                      {rec.description}
+                    </p>
+                    <button 
+                      onClick={(e) => {
+                        import("@/lib/animations").then(m => m.flyToCart(e, rec.image));
+                        addToCart(rec, 1);
+                      }}
+                      className="w-full border border-primary text-primary text-xs tracking-widest uppercase py-3 hover:bg-primary hover:text-secondary transition-colors"
+                    >
+                      Add To Bag
+                    </button>
+                  </div>
                 </div>
-              </div>
+              ))}
             </div>
+
+            <div className="max-w-xl mx-auto bg-secondary/30 p-8 border border-primary/10 mb-8">
+              <h3 className="font-serif text-xl mb-2 text-primary">The Ultimate Healing Bundle</h3>
+              <p className="text-sm text-primary/70 mb-6">These two crystals work perfectly in tandem to balance your energy.</p>
+              <button 
+                onClick={addBothToBag}
+                className="w-full bg-primary text-secondary text-sm tracking-widest uppercase py-4 hover:bg-accent transition-colors shadow-lg"
+              >
+                Add Both To Bag
+              </button>
+            </div>
+
+            <button 
+              onClick={resetQuiz}
+              className="text-xs tracking-widest uppercase text-primary/50 hover:text-primary transition-colors underline underline-offset-4"
+            >
+              Retake Quiz
+            </button>
           </div>
         )}
 
