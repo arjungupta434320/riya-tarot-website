@@ -44,21 +44,33 @@ export default function Navbar() {
     <>
       <header
         className={`sticky top-0 w-full z-50 transition-all duration-300 ${
-          isScrolled ? "bg-background/95 backdrop-blur-md shadow-sm py-4" : "bg-background md:bg-transparent py-4 md:py-6"
+          isScrolled ? "bg-background/95 backdrop-blur-md shadow-sm py-3" : "bg-background md:bg-transparent py-4 md:py-6"
         }`}
       >
-        <div className="container mx-auto h-[60px] md:h-[80px] px-4 md:px-6 grid grid-cols-3 items-center">
+        <div className="container mx-auto h-[70px] md:h-[90px] px-4 md:px-6 flex justify-between items-center xl:grid xl:grid-cols-3">
         
-        {/* Left: Mobile Hamburger & Desktop Links */}
+        {/* Left: Mobile Hamburger, Mobile Logo & Desktop Links */}
         <div className="flex justify-start items-center z-50">
           <button 
             type="button"
-            className="xl:hidden text-foreground p-2 -ml-2 cursor-pointer"
+            className="xl:hidden text-foreground p-2 -ml-2 cursor-pointer flex-shrink-0"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label="Toggle Menu"
           >
             {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
           </button>
+          
+          {/* Mobile Logo */}
+          <Link href="/" className="xl:hidden ml-1 flex items-center">
+            <Image 
+              src="/logo.jpg" 
+              alt="Riya Tarot Crystals" 
+              width={200} 
+              height={200} 
+              className="h-[65px] w-auto mix-blend-multiply scale-125 origin-left" 
+              priority 
+            />
+          </Link>
           
           <nav className="hidden xl:flex gap-3 xl:gap-4 2xl:gap-6 text-[10px] xl:text-xs tracking-widest uppercase whitespace-nowrap">
             <Link href="/" className="hover:text-accent transition-colors">Home</Link>
@@ -69,15 +81,15 @@ export default function Navbar() {
           </nav>
         </div>
 
-        {/* Center: Logo */}
-        <div className="flex justify-center items-center z-40">
+        {/* Center: Desktop Logo */}
+        <div className="hidden xl:flex justify-center items-center z-40">
           <Link href="/" className="flex flex-col items-center">
             <Image 
               src="/logo.jpg" 
               alt="Riya Tarot Crystals" 
-              width={180} 
-              height={180} 
-              className="h-12 w-auto md:h-[70px] mix-blend-multiply" 
+              width={250} 
+              height={250} 
+              className="h-[85px] w-auto mix-blend-multiply scale-110" 
               priority 
             />
           </Link>
