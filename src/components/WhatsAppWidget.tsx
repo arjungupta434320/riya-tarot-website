@@ -90,7 +90,9 @@ export default function WhatsAppWidget() {
             <div className="bg-[#25D366] p-4 text-white flex justify-between items-center shadow-sm relative z-10">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0">
-                  <MessageCircle size={22} className="text-white" />
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white">
+                    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+                  </svg>
                 </div>
                 <div>
                   <h3 className="font-semibold text-sm tracking-wide">Riya Tarot Crystals</h3>
@@ -176,9 +178,15 @@ export default function WhatsAppWidget() {
         onClick={() => setIsOpen(!isOpen)}
         aria-label="Chat with Riya Tarot Crystals on WhatsApp"
         aria-expanded={isOpen}
-        className="w-14 h-14 bg-[#25D366] text-white rounded-full shadow-[0_4px_15px_rgba(37,211,102,0.3)] flex items-center justify-center hover:scale-110 transition-transform duration-300 z-50 relative group outline-none focus-visible:ring-4 focus-visible:ring-[#25D366]/50"
+        className="w-[52px] h-[52px] bg-[#25D366] text-white rounded-full shadow-[0_4px_15px_rgba(37,211,102,0.3)] flex items-center justify-center hover:scale-110 transition-transform duration-300 z-50 relative group outline-none focus-visible:ring-4 focus-visible:ring-[#25D366]/50"
       >
-        {isOpen ? <X size={26} /> : <MessageCircle size={30} />}
+        {isOpen ? (
+          <X size={24} />
+        ) : (
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+          </svg>
+        )}
         
         {!isOpen && (
           <span className="absolute -top-0.5 -right-0.5 flex h-4 w-4">
