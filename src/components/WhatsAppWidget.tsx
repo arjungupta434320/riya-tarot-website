@@ -1,30 +1,24 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { MessageCircle, X, ChevronRight } from "lucide-react";
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
-import { usePathname, useSearchParams } from "next/navigation";
+import { motion } from "framer-motion";
+import { usePathname } from "next/navigation";
 
 // --- CONFIGURATION ---
 const WHATSAPP_NUMBER = "917889001587";
 
 export default function WhatsAppWidget() {
-  const [isOpen, setIsOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [productName, setProductName] = useState<string | null>(null);
   
-  const widgetRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const prefersReducedMotion = useReducedMotion();
+  const constraintsRef = useRef<HTMLDivElement>(null);
 
-  // Handle mounting and product detection
   useEffect(() => {
     setMounted(true);
     
     // Attempt to read product name if on product page
     if (pathname?.includes('/product')) {
-      // Find the main H1 which usually contains the product name on our product page
       const h1 = document.querySelector('h1');
       if (h1 && h1.innerText) {
         setProductName(h1.innerText);
@@ -32,178 +26,52 @@ export default function WhatsAppWidget() {
     } else {
       setProductName(null);
     }
-  }, [pathname, searchParams]);
+  }, [pathname]);
 
-  // Handle Click Outside & Escape Key
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (widgetRef.current && !widgetRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
-    };
-
-    const handleEscKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setIsOpen(false);
-      }
-    };
-
-    if (isOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-      document.addEventListener("keydown", handleEscKey);
+  const openWhatsApp = () => {
+    let message = "Hi Riya Tarot Crystals! I visited your website and would like help choosing a crystal bracelet.";
+    if (productName) {
+      message = `Hi Riya Tarot Crystals! I am interested in the ${productName} and would like to know more about it.`;
     }
-    
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-      document.removeEventListener("keydown", handleEscKey);
-    };
-  }, [isOpen]);
-
-  const openWhatsApp = (message: string) => {
     const encodedMessage = encodeURIComponent(message);
     const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`;
     window.open(url, "_blank", "noopener,noreferrer");
-    setIsOpen(false);
   };
 
   if (!mounted) return null;
 
-  // Animation settings honoring prefers-reduced-motion
-  const animDuration = prefersReducedMotion ? 0 : 0.3;
-  const initialScale = prefersReducedMotion ? 1 : 0.95;
-  const initialY = prefersReducedMotion ? 0 : 20;
-
   return (
-    <div className="fixed bottom-4 right-4 md:bottom-5 md:right-5 z-[99999] flex flex-col items-end" ref={widgetRef}>
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: initialY, scale: initialScale }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: initialY, scale: initialScale }}
-            transition={{ duration: animDuration, ease: "easeOut" }}
-            className="bg-[#FAFAFA] border border-primary/10 shadow-[0_15px_40px_rgba(0,0,0,0.12)] rounded-2xl mb-4 w-[90vw] max-w-[380px] overflow-hidden flex flex-col origin-bottom-right"
-            role="dialog"
-            aria-label="WhatsApp Support Chat"
-          >
-            {/* Header */}
-            <div className="bg-[#25D366] p-4 text-white flex justify-between items-center shadow-sm relative z-10">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white">
-                    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="font-semibold text-sm tracking-wide">Riya Tarot Crystals</h3>
-                  <p className="text-[11px] opacity-90 flex items-center gap-1.5 mt-0.5">
-                    <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></span>
-                    Typically replies quickly
-                  </p>
-                </div>
-              </div>
-              <button 
-                onClick={() => setIsOpen(false)}
-                className="text-white/80 hover:text-white transition-colors p-1"
-                aria-label="Close chatbox"
-              >
-                <X size={20} />
-              </button>
-            </div>
-
-            {/* Welcome Message Box */}
-            <div className="p-5 bg-white border-b border-primary/5">
-              <div className="bg-[#F5F5F5] p-4 rounded-xl rounded-tl-none shadow-sm text-[13px] text-primary/80 max-w-[90%] relative leading-relaxed">
-                <p className="font-semibold text-primary mb-1">Hi! Welcome to Riya Tarot Crystals.</p>
-                <p className="mb-3">Need help choosing the right crystal bracelet? We're happy to help.</p>
-                <p className="font-medium text-primary">How can we help you today?</p>
-              </div>
-            </div>
-
-            {/* Quick Action Buttons */}
-            <div className="p-4 flex flex-col gap-2.5 bg-white">
-              <button
-                onClick={() => openWhatsApp("Hi Riya Tarot Crystals! I need help choosing the best crystal bracelet for my intention. Can you recommend one for me?")}
-                className="w-full text-left bg-white border border-primary/15 hover:border-[#25D366] hover:bg-[#25D366]/5 transition-colors p-3.5 rounded-xl text-[13px] font-medium text-primary flex items-center justify-between group"
-              >
-                Help me choose a crystal
-                <ChevronRight size={16} className="text-primary/40 group-hover:text-[#25D366] transition-colors" />
-              </button>
-              
-              <button
-                onClick={() => {
-                  const msg = productName 
-                    ? `Hi Riya Tarot Crystals! I'm interested in the ${productName} and would like to know more about it.`
-                    : "Hi Riya Tarot Crystals! I have a question about one of your crystal bracelets. Can you please help me?";
-                  openWhatsApp(msg);
-                }}
-                className="w-full text-left bg-white border border-primary/15 hover:border-[#25D366] hover:bg-[#25D366]/5 transition-colors p-3.5 rounded-xl text-[13px] font-medium text-primary flex items-center justify-between group"
-              >
-                Question about a bracelet
-                <ChevronRight size={16} className="text-primary/40 group-hover:text-[#25D366] transition-colors" />
-              </button>
-              
-              <button
-                onClick={() => openWhatsApp("Hi Riya Tarot Crystals! I would like to know more about placing an order for a crystal bracelet.")}
-                className="w-full text-left bg-white border border-primary/15 hover:border-[#25D366] hover:bg-[#25D366]/5 transition-colors p-3.5 rounded-xl text-[13px] font-medium text-primary flex items-center justify-between group"
-              >
-                I want to place an order
-                <ChevronRight size={16} className="text-primary/40 group-hover:text-[#25D366] transition-colors" />
-              </button>
-              
-              <button
-                onClick={() => openWhatsApp("Hi Riya Tarot Crystals! I visited your website and would like to speak with someone about crystal bracelets.")}
-                className="w-full text-left bg-white border border-primary/15 hover:border-[#25D366] hover:bg-[#25D366]/5 transition-colors p-3.5 rounded-xl text-[13px] font-medium text-primary flex items-center justify-between group"
-              >
-                Talk to us on WhatsApp
-                <ChevronRight size={16} className="text-primary/40 group-hover:text-[#25D366] transition-colors" />
-              </button>
-            </div>
-
-            {/* Footer */}
-            <div className="bg-[#FAFAFA] p-4 text-center border-t border-primary/5">
-              <p className="text-[11px] text-primary/60 mb-2">Need help finding your perfect crystal?</p>
-              <button
-                onClick={() => openWhatsApp("Hi Riya Tarot Crystals! I visited your website and would like help choosing the right crystal bracelet for me.")}
-                className="text-[12px] font-semibold text-[#25D366] hover:text-[#1da851] transition-colors inline-flex items-center gap-1"
-              >
-                Chat with us on WhatsApp &rarr;
-              </button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      <button
-        onClick={() => setIsOpen(!isOpen)}
+    <div 
+      className="fixed inset-0 pointer-events-none z-[99999]" 
+      ref={constraintsRef}
+    >
+      <motion.button
+        drag
+        dragConstraints={constraintsRef}
+        dragElastic={0.1}
+        dragMomentum={false}
+        whileDrag={{ scale: 1.05, cursor: "grabbing" }}
+        whileHover={{ scale: 1.05 }}
+        onClick={openWhatsApp}
         aria-label="Chat with Riya Tarot Crystals on WhatsApp"
-        aria-expanded={isOpen}
-        className="w-[52px] h-[52px] bg-[#25D366] text-white rounded-full shadow-[0_4px_15px_rgba(37,211,102,0.3)] flex items-center justify-center hover:scale-110 transition-transform duration-300 z-50 relative group outline-none focus-visible:ring-4 focus-visible:ring-[#25D366]/50"
+        title="Drag me!"
+        className="pointer-events-auto absolute bottom-4 right-4 md:bottom-5 md:right-5 w-[52px] h-[52px] bg-[#25D366] text-white rounded-full shadow-[0_4px_15px_rgba(37,211,102,0.3)] flex items-center justify-center cursor-grab group outline-none focus-visible:ring-4 focus-visible:ring-[#25D366]/50"
       >
-        {isOpen ? (
-          <X size={24} />
-        ) : (
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
-          </svg>
-        )}
+        <svg viewBox="0 0 24 24" fill="currentColor" width="28" height="28">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.878-.788-1.47-1.761-1.643-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+        </svg>
         
-        {!isOpen && (
-          <span className="absolute -top-0.5 -right-0.5 flex h-4 w-4">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-4 w-4 bg-red-500 border-2 border-white"></span>
-          </span>
-        )}
+        <span className="absolute -top-0.5 -right-0.5 flex h-3.5 w-3.5">
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+          <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-red-500 border-2 border-white"></span>
+        </span>
         
         {/* Tooltip */}
-        {!isOpen && (
-          <div className="hidden md:block absolute right-full mr-4 bg-white text-primary text-xs py-2 px-3 rounded-lg shadow-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none font-medium">
-            Chat with us
-            {/* Triangle pointer */}
-            <div className="absolute top-1/2 -right-1 -translate-y-1/2 border-y-4 border-y-transparent border-l-4 border-l-white"></div>
-          </div>
-        )}
-      </button>
+        <div className="hidden md:block absolute right-full mr-4 bg-white text-primary text-xs py-2 px-3 rounded-lg shadow-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none font-medium">
+          Chat with us
+          <div className="absolute top-1/2 -right-1 -translate-y-1/2 border-y-4 border-y-transparent border-l-4 border-l-white"></div>
+        </div>
+      </motion.button>
     </div>
   );
 }
