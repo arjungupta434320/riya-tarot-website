@@ -57,7 +57,7 @@ export default function TrackOrderPage() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Enter your email address" 
-            className="flex-grow bg-transparent border border-primary/20 px-4 py-4 focus:outline-none focus:border-primary transition-colors"
+            className="flex-grow bg-transparent border border-primary/20 px-4 py-4 text-base focus:outline-none focus:border-primary transition-colors"
           />
           <button 
             type="submit" 
