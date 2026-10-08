@@ -6,7 +6,7 @@ import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { usePathname, useSearchParams } from "next/navigation";
 
 // --- CONFIGURATION ---
-const WHATSAPP_NUMBER = "919876543210";
+const WHATSAPP_NUMBER = "917889001587";
 
 export default function WhatsAppWidget() {
   const [isOpen, setIsOpen] = useState(false);
