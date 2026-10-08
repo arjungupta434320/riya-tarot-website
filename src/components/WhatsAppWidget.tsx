@@ -14,6 +14,8 @@ export default function WhatsAppWidget() {
   const pathname = usePathname();
   const constraintsRef = useRef<HTMLDivElement>(null);
 
+  const isDragging = useRef(false);
+
   useEffect(() => {
     setMounted(true);
     
@@ -50,9 +52,20 @@ export default function WhatsAppWidget() {
         dragConstraints={constraintsRef}
         dragElastic={0.1}
         dragMomentum={false}
+        onDragStart={() => isDragging.current = true}
+        onDragEnd={() => {
+          setTimeout(() => isDragging.current = false, 150);
+        }}
         whileDrag={{ scale: 1.05, cursor: "grabbing" }}
         whileHover={{ scale: 1.05 }}
-        onClick={openWhatsApp}
+        onClick={(e) => {
+          if (isDragging.current) {
+            e.preventDefault();
+            return;
+          }
+          openWhatsApp();
+        }}
+        style={{ touchAction: "none" }}
         aria-label="Chat with Riya Tarot Crystals on WhatsApp"
         title="Drag me!"
         className="pointer-events-auto absolute bottom-4 right-4 md:bottom-5 md:right-5 w-[52px] h-[52px] bg-[#25D366] text-white rounded-full shadow-[0_4px_15px_rgba(37,211,102,0.3)] flex items-center justify-center cursor-grab group outline-none focus-visible:ring-4 focus-visible:ring-[#25D366]/50"
