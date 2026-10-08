@@ -1,57 +1,130 @@
 "use client";
 
-import { motion } from "framer-motion";
-import Link from "next/link";
-import { useState, useRef } from "react";
+import { useState, useEffect } from "react";
+import { MessageCircle, X, Send } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function WhatsAppWidget() {
-  const [isDragging, setIsDragging] = useState(false);
-  const constraintsRef = useRef(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const [message, setMessage] = useState("");
+  const [mounted, setMounted] = useState(false);
+
+  const whatsappNumber = "7889001587"; 
+
+  useEffect(() => {
+    setMounted(true);
+    const timer = setTimeout(() => {
+      const hasSeenWidget = localStorage.getItem("hasSeenChatWidget");
+      if (!hasSeenWidget) {
+        setIsOpen(true);
+        localStorage.setItem("hasSeenChatWidget", "true");
+      }
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handleSend = () => {
+    if (!message.trim()) return;
+    const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+    window.open(url, "_blank");
+    setMessage("");
+    setIsOpen(false);
+  };
+
+  if (!mounted) return null;
 
   return (
-    <>
-      {/* Invisible full-screen container to constrain dragging so it doesn't leave the screen */}
-      <div ref={constraintsRef} className="fixed inset-4 pointer-events-none z-[60]" />
-      
-      <motion.div
-        drag
-        dragConstraints={constraintsRef}
-        dragElastic={0.1}
-        dragMomentum={false}
-        onDragStart={() => setIsDragging(true)}
-        onDragEnd={() => {
-          // Small delay to prevent accidental clicks when finishing a drag
-          setTimeout(() => setIsDragging(false), 150);
-        }}
-        whileDrag={{ scale: 1.1, cursor: "grabbing" }}
-        className="fixed bottom-6 right-6 z-[60] flex items-center justify-center group cursor-grab"
-        style={{ touchAction: "none" }}
-      >
-        <Link 
-          href="https://wa.me/7889001587" 
-          target="_blank" 
-          rel="noopener noreferrer"
-          onClick={(e) => {
-            if (isDragging) e.preventDefault();
-          }}
-          className="bg-[#25D366] text-white p-4 rounded-full shadow-lg hover:scale-110 transition-transform duration-300 flex items-center justify-center pointer-events-auto"
-          aria-label="Chat on WhatsApp"
-        >
-          <svg
-            viewBox="0 0 24 24"
-            width="32"
-            height="32"
-            fill="currentColor"
-            className="w-8 h-8"
+    <div className="fixed bottom-6 right-6 z-[9999] flex flex-col items-end">
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: 20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.95 }}
+            transition={{ duration: 0.3 }}
+            className="bg-white border border-primary/10 shadow-[0_20px_50px_rgba(0,0,0,0.15)] rounded-2xl mb-4 w-[320px] overflow-hidden flex flex-col origin-bottom-right"
           >
-            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/>
-          </svg>
-          {/* Tooltip on hover */}
-          <span className="absolute right-full mr-4 bg-white text-primary text-xs font-semibold py-2 px-3 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-md whitespace-nowrap">
-            Drag to move
+            {/* Header */}
+            <div className="bg-[#25D366] p-4 text-white flex justify-between items-center shadow-md z-10 relative">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+                  <MessageCircle size={22} className="text-white" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-[15px] leading-tight">Riya Tarot Support</h3>
+                  <p className="text-[11px] opacity-90 flex items-center gap-1.5 mt-0.5">
+                    <span className="w-2 h-2 bg-white rounded-full animate-pulse"></span>
+                    Typically replies instantly
+                  </p>
+                </div>
+              </div>
+              <button 
+                onClick={() => setIsOpen(false)}
+                className="text-white/80 hover:text-white transition-colors p-1"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            {/* Chat Area */}
+            <div 
+              className="p-5 h-64 overflow-y-auto flex flex-col gap-4 relative"
+              style={{
+                backgroundColor: '#E5DDD5',
+                backgroundImage: 'url("https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png")',
+                backgroundSize: 'cover'
+              }}
+            >
+              <div className="bg-white p-3.5 rounded-2xl rounded-tl-none shadow-sm text-[13px] text-gray-800 max-w-[85%] relative self-start leading-relaxed">
+                Hi there! 👋<br/><br/>Welcome to Riya Tarot Crystals.<br/>How can we help you find the perfect crystal today?
+                <span className="text-[9px] text-gray-400 absolute bottom-1 right-2">Just now</span>
+              </div>
+            </div>
+
+            {/* Input Area */}
+            <div className="p-3 bg-[#f0f0f0] flex items-center gap-2">
+              <input
+                type="text"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+                placeholder="Type a message..."
+                className="flex-grow bg-white rounded-full px-4 py-2.5 text-[14px] focus:outline-none shadow-sm text-gray-800"
+              />
+              <button
+                onClick={handleSend}
+                disabled={!message.trim()}
+                className="w-10 h-10 rounded-full bg-[#25D366] text-white flex items-center justify-center flex-shrink-0 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity shadow-sm"
+              >
+                <Send size={18} className="ml-1" />
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-14 h-14 bg-[#25D366] text-white rounded-full shadow-[0_4px_20px_rgba(37,211,102,0.4)] flex items-center justify-center hover:scale-110 transition-transform duration-300 z-50 relative group"
+      >
+        {isOpen ? <X size={26} /> : <MessageCircle size={30} />}
+        
+        {!isOpen && (
+          <span className="absolute -top-0.5 -right-0.5 flex h-4 w-4">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-4 w-4 bg-red-500 border-2 border-white"></span>
           </span>
-        </Link>
-      </motion.div>
-    </>
+        )}
+        
+        {/* Tooltip */}
+        {!isOpen && (
+          <div className="absolute right-full mr-4 bg-white text-primary text-xs py-2 px-3 rounded-lg shadow-[0_5px_15px_rgba(0,0,0,0.1)] opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none font-medium">
+            Chat with us!
+            {/* Triangle pointer */}
+            <div className="absolute top-1/2 -right-1.5 -translate-y-1/2 border-y-8 border-y-transparent border-l-8 border-l-white"></div>
+          </div>
+        )}
+      </button>
+    </div>
   );
 }
